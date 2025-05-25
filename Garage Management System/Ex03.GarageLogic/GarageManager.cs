@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace Ex03.GarageLogic
 {
-    internal class Car : Vehicle
+    internal class GarageManager
     {
+        internal Dictionary<string, VehicleInGarage> m_VehiclesInGarage = new Dictionary<string, VehicleInGarage>();
     }
 }

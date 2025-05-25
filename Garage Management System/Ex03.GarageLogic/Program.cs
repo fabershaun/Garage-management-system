@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace Ex03.GarageLogic
 {
-    internal class ElectricEngine
+    internal class Program
     {
+        public static void Main()
+        {
+
+        }
     }
 }

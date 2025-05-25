@@ -12,9 +12,9 @@ namespace Ex03.GarageLogic
         private float m_CurrentAirPressure;
         private readonly float r_MaxAirPressure;
 
-        private void inflate(float i_AirPressure)
+        private void inflate(float i_AirPressureToAdd)
         {
-            float newAirPressure = m_CurrentAirPressure + i_AirPressure;
+            float newAirPressure = m_CurrentAirPressure + i_AirPressureToAdd;
 
             if (newAirPressure > r_MaxAirPressure || newAirPressure < 0)
             {
@@ -22,6 +22,8 @@ namespace Ex03.GarageLogic
             }
 
             m_CurrentAirPressure = newAirPressure;
+
+            //Add exception of negative air pressure to add
         }
 
 

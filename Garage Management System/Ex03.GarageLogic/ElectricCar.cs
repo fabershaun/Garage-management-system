@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace Ex03.GarageLogic
 {
-    internal class Truck : Vehicle
+    internal class ElectricCar
     {
+        internal ElectricEngine engine;
     }
 }
