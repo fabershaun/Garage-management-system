@@ -9,25 +9,50 @@ namespace Ex03.GarageLogic
 {
     internal abstract class Car : Vehicle
     {
-        private readonly eCarColor r_Color;
-        private readonly int r_NumOfDoors;
+        private const int k_MaxAirPressureOfCar = 32;
+        private const int k_NumOfCarWheels = 5;
+        private eCarColor m_Color;
+        private eNumOfDoors m_NumOfDoors;
 
-        internal Car(string i_LicenseID, string i_ModelName, float i_EnergyPercentage, List<Wheel> i_Wheels, eCarColor i_Color, int i_NumOfDoors) 
-            : base(i_LicenseID, i_ModelName, i_EnergyPercentage, i_Wheels)
+        internal Car(string i_LicenseNumber, string i_ModelName)
+            : base(i_LicenseNumber, i_ModelName)
         {
-            r_Color = i_Color;
-            r_NumOfDoors = i_NumOfDoors;
+            List<Wheel> wheels = new List<Wheel>();
+
+            for (int i = 0; i < k_NumOfCarWheels; i++)
+            {
+                wheels.Add(new Wheel(k_MaxAirPressureOfCar));
+            }
+
+            SetWheels(wheels);
         }
 
-        internal enum eCarColor
+        internal eCarColor Color
+        {
+            get { return m_Color; }
+            set { m_Color = value; }
+        }
+
+        internal eNumOfDoors NumOfDoors
+        {
+            get { return m_NumOfDoors; }
+            set { m_NumOfDoors = value; }
+        }
+
+        public enum eCarColor
         {
             Yellow,
             Black,
             White,
             Silver,
         }
+
+        public enum eNumOfDoors
+        {
+            Two,
+            Three,
+            Four,
+            Five,
+        }
     }
 }
-
-private float m_EnergyPercentage;
-private List<Wheel> m_Wheels;

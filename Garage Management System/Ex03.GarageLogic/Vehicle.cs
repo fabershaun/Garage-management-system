@@ -2,35 +2,81 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Ex03.GarageLogic
 {
-    internal abstract class Vehicle
+    public abstract class Vehicle
     {
         protected readonly string r_ModelName;
         protected readonly string r_LicenseNumber;
         private float m_EnergyPercentage;
         private List<Wheel> m_Wheels;
 
-        protected Vehicle(string i_ModelName, string i_LicenseNumber, float i_EnergyPercentage, List<Wheel> i_Wheels)
+        protected Vehicle(string i_LicenseNumber, string i_ModelName)
         {
             if (string.IsNullOrEmpty(i_ModelName))
             {
-                throw new ArgumentNullException(nameof(i_ModelName), "Model cannot be null or empty");
+                throw new ArgumentNullException("i_ModelName", "Model cannot be null or empty");
             }
             if (string.IsNullOrEmpty(i_LicenseNumber))
             {
-                throw new ArgumentNullException(nameof(i_LicenseNumber), "License plate cannot be null or empty");
-            }
-            if (i_EnergyPercentage < 0 || i_EnergyPercentage > 100)
-            {
-                throw new ArgumentOutOfRangeException(nameof(i_EnergyPercentage), "Energy percentage must be between 0 and 100");
+                throw new ArgumentNullException("i_LicenseNumber", "License plate cannot be null or empty");
             }
             r_ModelName = i_ModelName;
             r_LicenseNumber = i_LicenseNumber;
-            m_EnergyPercentage = i_EnergyPercentage;
-            m_Wheels = i_Wheels ?? throw new ArgumentNullException(nameof(i_Wheels), "Wheels cannot be null");
+
+        }
+
+        //Think about ita
+        internal List<Wheel> Wheels
+        {
+            get { return m_Wheels; }
+            set { m_Wheels = SetWheels(value); }
+        }
+
+        protected float EnergyPercentage
+        {
+            get { return m_EnergyPercentage; }
+            set { m_EnergyPercentage = SetEnergyPercentage(value); }
+        }
+
+        internal List<Wheel> SetWheels(List<Wheel> i_Wheels)
+        {
+            if (i_Wheels == null)
+            {
+                throw new ArgumentNullException("i_Wheels");
+            }
+
+            return i_Wheels;
+        }
+
+        internal float SetEnergyPercentage(float i_Percentage)
+        {
+            if (i_Percentage < 0 || i_Percentage > 100)
+            {
+                throw new ValueRangeException(i_Percentage, 0, 100);
+
+            }
+
+            return i_Percentage;
+        }
+
+        public override string ToString()
+        {
+            StringBuilder vehicleInfo = new StringBuilder();
+
+            vehicleInfo.AppendLine("-----\tGENERAL\t-----");
+            vehicleInfo.AppendLine($"License Plate:\t{r_LicenseNumber}");
+            vehicleInfo.AppendLine($"Model Name:\t{r_ModelName}");
+            vehicleInfo.AppendLine();
+
+            vehicleInfo.AppendLine("-----\tTIERS\t-----");
+            vehicleInfo.AppendLine($"Wheel Manufacture: {m_Wheels[0].Manufacturer}");
+            vehicleInfo.AppendLine($"Wheel Current Air pressure:\t{m_Wheels[0].CurrentAirPressure}");
+
+            return vehicleInfo.ToString();
         }
     }
 

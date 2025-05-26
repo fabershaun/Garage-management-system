@@ -11,29 +11,24 @@ namespace Ex03.GarageLogic
         private float m_BatteryHoursLeft;
         private readonly float r_BatteryMaxHours;
 
-        public ElectricEngine(float i_BatteryHoursLeft, float i_BatteryMaxHours)
+
+        public ElectricEngine(float i_BatteryMaxHours)
         {
-            if (i_BatteryHoursLeft < 0 || i_BatteryHoursLeft > i_BatteryMaxHours)
-            {
-                throw new ValueRangeException(nameof(i_BatteryHoursLeft), $"Current hours must be between 0 and {i_BatteryMaxHours}. Provided value: {i_BatteryHoursLeft}"); //UI
-            }
-            m_BatteryHoursLeft = i_BatteryHoursLeft;
             r_BatteryMaxHours = i_BatteryMaxHours;
         }
 
         public float CurrentHours
         {
-            get
+            get { return m_BatteryHoursLeft; }
+            
+            set
             {
-                return m_BatteryHoursLeft;
-            }
-        }
+                if (value < 0 || value > r_BatteryMaxHours)
+                {
+                    throw new ValueRangeException(value, 0, r_BatteryMaxHours);
+                }
 
-        public float MaxHours
-        {
-            get
-            {
-                return r_BatteryMaxHours;
+                m_BatteryHoursLeft = value;
             }
         }
 
@@ -41,14 +36,14 @@ namespace Ex03.GarageLogic
         {
             if (i_HoursToAdd < 0)
             {
-                throw new ArgumentException("Hours to add cannot be negative", nameof(i_HoursToAdd)); //UI
+                throw new ValueRangeException(i_HoursToAdd, 0, r_BatteryMaxHours);
             }
 
             float projectedBatteryHours = m_BatteryHoursLeft + i_HoursToAdd;
 
             if (projectedBatteryHours > r_BatteryMaxHours)
             {
-                throw new ValueRangeException(nameof(i_HoursToAdd), $"Charging hours cannot exceed maximum hours ({r_BatteryMaxHours}). Attempted to add: {i_HoursToAdd}");
+                throw new ValueRangeException(projectedBatteryHours, 0, r_BatteryMaxHours);
             }
 
             m_BatteryHoursLeft = projectedBatteryHours;

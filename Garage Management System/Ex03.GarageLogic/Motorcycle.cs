@@ -8,17 +8,42 @@ namespace Ex03.GarageLogic
 {
     internal class Motorcycle : Vehicle
     {
-        private readonly eLicenseType r_LicenseType;
-        private readonly int r_engineDisplacementCc;
+        private const int k_MaxAirPressureOfMotorcycle = 30;
+        private const int k_NumOfMotorcycleWheels = 2;
+        private eLicenseType m_LicenseType;
+        private int m_EngineDisplacementCc;
 
-        internal Motorcycle(string i_LicenseID, string i_ModelName, float i_EnergyPercentage, List<Wheel> i_Wheels, eLicenseType i_LicenseType, int i_engineDisplacementCc)
-            : base(i_LicenseID, i_ModelName, i_EnergyPercentage, i_Wheels)
+        internal Motorcycle(string i_LicenseNumber, string i_ModelName): base(i_LicenseNumber, i_ModelName)
         {
-            r_LicenseType = i_LicenseType;
-            r_engineDisplacementCc = i_engineDisplacementCc;
+            List<Wheel> wheels = new List<Wheel>();
+
+            for (int i = 0; i < k_NumOfMotorcycleWheels; i++) //Pay attention to facebook - what guy said about user update every wheel
+            {
+                wheels.Add(new Wheel(k_MaxAirPressureOfMotorcycle));
+            }
+            SetWheels(wheels);
         }
 
-        internal enum eLicenseType
+        internal eLicenseType LicenseType
+        {
+            get { return m_LicenseType; }
+            set { m_LicenseType = value; }
+        }
+        
+        internal int EngineDisplacementCc
+        {
+            get { return m_EngineDisplacementCc; }
+            set
+            {
+                if (value <= 0)
+                {
+                    throw new ArgumentException("Engine displacement must be a positive value", "value");
+                }
+                m_EngineDisplacementCc = value;
+            }
+        }
+
+        public enum eLicenseType
         {
             A,
             A2,

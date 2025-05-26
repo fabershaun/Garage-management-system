@@ -4,13 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Ex03.GarageLogic
+namespace Ex03.ConsoleUI
 {
     internal class Program
     {
-        public static void Main()
-        {
-
-        }
     }
 }
