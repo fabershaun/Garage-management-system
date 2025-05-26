@@ -8,7 +8,7 @@ namespace Ex03.GarageLogic
 {
     public static class Utils
     {
-        internal enum eGarageVehicleStatus
+        public enum eGarageVehicleStatus
         {
             InRepair,
             Repaired,

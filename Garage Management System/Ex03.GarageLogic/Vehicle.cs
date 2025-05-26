@@ -26,11 +26,9 @@ namespace Ex03.GarageLogic
             }
             r_ModelName = i_ModelName;
             r_LicenseNumber = i_LicenseNumber;
-
         }
 
-        //Think about ita
-        internal List<Wheel> Wheels
+        public List<Wheel> Wheels
         {
             get { return m_Wheels; }
             set { m_Wheels = SetWheels(value); }
@@ -52,12 +50,11 @@ namespace Ex03.GarageLogic
             return i_Wheels;
         }
 
-        internal float SetEnergyPercentage(float i_Percentage)
+        public float SetEnergyPercentage(float i_Percentage)
         {
             if (i_Percentage < 0 || i_Percentage > 100)
             {
                 throw new ValueRangeException(i_Percentage, 0, 100);
-
             }
 
             return i_Percentage;
@@ -78,7 +75,9 @@ namespace Ex03.GarageLogic
 
             return vehicleInfo.ToString();
         }
+
+        public abstract void SetAdditionalInfo(string i_AdditionalInfo1, string i_AdditionalInfo2);
+
+        public abstract void AddAdditionalQuestions(List<string> io_QuestionsList);
     }
-
-
 }

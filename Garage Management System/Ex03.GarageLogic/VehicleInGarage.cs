@@ -3,14 +3,14 @@ using static Ex03.GarageLogic.Utils;
 
 namespace Ex03.GarageLogic
 {
-    internal class VehicleInGarage
+    public class VehicleInGarage
     {
         internal string m_OwnerName;
         internal string m_OwnerPhoneNumber;
         internal eGarageVehicleStatus m_Status;
         internal Vehicle m_Vehicle;
 
-        internal VehicleInGarage(string i_OwnerName, string i_OwnerPhoneNumber, eGarageVehicleStatus i_Status, Vehicle i_Vehicle)
+        public VehicleInGarage(string i_OwnerName, string i_OwnerPhoneNumber, eGarageVehicleStatus i_Status, Vehicle i_Vehicle)
         {
             if (string.IsNullOrEmpty(i_OwnerName))
             {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Ex03.GarageLogic.Car;
 
 namespace Ex03.GarageLogic
 {
@@ -39,6 +40,18 @@ namespace Ex03.GarageLogic
 
                 m_CargoVolume = value;
             }
+        }
+
+        internal override void SetAdditionalInfo(string i_AdditionalInfo1, string i_AdditionalInfo2)
+        {
+            m_CarriesHazardousMaterials = bool.Parse(i_AdditionalInfo1);
+            m_CargoVolume = float.Parse(i_AdditionalInfo2);
+        }
+
+        public override void AddAdditionalQuestions(List<string> io_QuestionsList)
+        {
+            io_QuestionsList.Add("If carries hazardous materials type 'true' else type 'false'");
+            io_QuestionsList.Add("Cargo volume");
         }
     }
 }

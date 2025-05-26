@@ -50,5 +50,17 @@ namespace Ex03.GarageLogic
             AB,
             B2,
         }
+
+        internal override void SetAdditionalInfo(string i_AdditionalInfo1, string i_AdditionalInfo2)
+        {
+            m_LicenseType = (eLicenseType)Enum.Parse(typeof(eLicenseType), i_AdditionalInfo1, false);
+            m_EngineDisplacementCc = int.Parse(i_AdditionalInfo2);
+        }
+
+        public override void AddAdditionalQuestions(List<string> io_QuestionsList)
+        {
+            io_QuestionsList.Add("License type (A, A2, AB, B2)");
+            io_QuestionsList.Add("Engine displacement in cc");
+        }
     }
 }

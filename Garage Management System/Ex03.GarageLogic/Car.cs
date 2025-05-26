@@ -27,6 +27,7 @@ namespace Ex03.GarageLogic
             SetWheels(wheels);
         }
 
+        
         internal eCarColor Color
         {
             get { return m_Color; }
@@ -53,6 +54,18 @@ namespace Ex03.GarageLogic
             Three,
             Four,
             Five,
+        }
+
+        internal override void SetAdditionalInfo(string i_AdditionalInfo1, string i_AdditionalInfo2)
+        {
+            m_Color = (eCarColor)Enum.Parse(typeof(eCarColor), i_AdditionalInfo1, false);
+            m_NumOfDoors = (eNumOfDoors)Enum.Parse(typeof(eNumOfDoors), i_AdditionalInfo2, false);
+        }
+
+        public override void AddAdditionalQuestions(List<string> io_QuestionsList) 
+        {
+            io_QuestionsList.Add("Car color (Yellow, Black, White, Silver)");
+            io_QuestionsList.Add("Number of doors in the car");
         }
     }
 }
