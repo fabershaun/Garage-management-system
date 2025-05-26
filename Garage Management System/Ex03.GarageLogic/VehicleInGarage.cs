@@ -5,10 +5,10 @@ namespace Ex03.GarageLogic
 {
     public class VehicleInGarage
     {
-        internal string m_OwnerName;
-        internal string m_OwnerPhoneNumber;
-        internal eGarageVehicleStatus m_Status;
-        internal Vehicle m_Vehicle;
+        private string m_OwnerName;
+        private string m_OwnerPhoneNumber;
+        private eGarageVehicleStatus m_Status;
+        private Vehicle m_Vehicle;
 
         public VehicleInGarage(string i_OwnerName, string i_OwnerPhoneNumber, eGarageVehicleStatus i_Status, Vehicle i_Vehicle)
         {
@@ -25,6 +25,51 @@ namespace Ex03.GarageLogic
             m_OwnerPhoneNumber = i_OwnerPhoneNumber;
             m_Status = i_Status;
             m_Vehicle = i_Vehicle ?? throw new ArgumentNullException("i_Vehicle", "Vehicle cannot be null");
+        }
+
+        internal string OwnerName
+        {
+            get { return m_OwnerName; }
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                {
+                    throw new ArgumentNullException("value", "Owner name cannot be null or empty");
+                }
+                m_OwnerName = value;
+            }
+        }
+
+        internal string OwnerPhoneNumber
+        {
+            get { return m_OwnerPhoneNumber; }
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                {
+                    throw new ArgumentNullException("value", "Owner phone number cannot be null or empty");
+                }
+                m_OwnerPhoneNumber = value;
+            }
+        }
+
+        public eGarageVehicleStatus Status
+        {
+            get { return m_Status; }
+            set { m_Status = value; }
+        }
+
+        public Vehicle Vehicle
+        {
+            get { return m_Vehicle; }
+            set
+            {
+                if (value == null)
+                {
+                    throw new ArgumentNullException("value", "Vehicle cannot be null");
+                }
+                m_Vehicle = value;
+            }
         }
     }
 }

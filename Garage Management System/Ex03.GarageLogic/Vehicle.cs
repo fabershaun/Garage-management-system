@@ -11,8 +11,10 @@ namespace Ex03.GarageLogic
     {
         protected readonly string r_ModelName;
         protected readonly string r_LicenseNumber;
-        private float m_EnergyPercentage;
-        private List<Wheel> m_Wheels;
+        protected float m_EnergyPercentage;
+        protected List<Wheel> m_Wheels;
+        protected bool m_IsFuelType;
+        protected bool m_IsElectricType;
 
         protected Vehicle(string i_LicenseNumber, string i_ModelName)
         {
@@ -28,19 +30,31 @@ namespace Ex03.GarageLogic
             r_LicenseNumber = i_LicenseNumber;
         }
 
+
+        public float EnergyPercentage
+        {
+            get { return m_EnergyPercentage; }
+            set { m_EnergyPercentage = value; }
+        }
+
+        public bool IsFuelType
+        {
+            get { return m_IsFuelType; }
+            set { m_IsFuelType = value; }
+        }
+
+        public bool IsElectricType
+        {
+            get { return m_IsElectricType; }
+            set { m_IsElectricType = value; }
+        }
+
         public List<Wheel> Wheels
         {
             get { return m_Wheels; }
-            set { m_Wheels = SetWheels(value); }
+            set { m_Wheels = setWheels(value); }
         }
-
-        protected float EnergyPercentage
-        {
-            get { return m_EnergyPercentage; }
-            set { m_EnergyPercentage = SetEnergyPercentage(value); }
-        }
-
-        internal List<Wheel> SetWheels(List<Wheel> i_Wheels)
+        private List<Wheel> setWheels(List<Wheel> i_Wheels)
         {
             if (i_Wheels == null)
             {
@@ -50,16 +64,14 @@ namespace Ex03.GarageLogic
             return i_Wheels;
         }
 
-        public float SetEnergyPercentage(float i_Percentage)
-        {
-            if (i_Percentage < 0 || i_Percentage > 100)
-            {
-                throw new ValueRangeException(i_Percentage, 0, 100);
-            }
+        public abstract void SetEnergyPercentage(float i_EnergyAmount);
 
-            return i_Percentage;
-        }
+        public abstract void SetEnergyAmountByPercentage(float i_EnergyPercentage);
+        
+        public abstract void SetEnergyAmountByAmount(float i_EnergyAmount);
 
+
+        
         public override string ToString()
         {
             StringBuilder vehicleInfo = new StringBuilder();

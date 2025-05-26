@@ -51,7 +51,7 @@ namespace Ex03.GarageLogic
             B2,
         }
 
-        internal override void SetAdditionalInfo(string i_AdditionalInfo1, string i_AdditionalInfo2)
+        public override void SetAdditionalInfo(string i_AdditionalInfo1, string i_AdditionalInfo2)
         {
             m_LicenseType = (eLicenseType)Enum.Parse(typeof(eLicenseType), i_AdditionalInfo1, false);
             m_EngineDisplacementCc = int.Parse(i_AdditionalInfo2);

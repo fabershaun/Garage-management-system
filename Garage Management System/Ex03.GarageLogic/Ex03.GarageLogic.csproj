@@ -47,6 +47,7 @@
     <Compile Include="FuelEngine.cs" />
     <Compile Include="FuelMotorcycle.cs" />
     <Compile Include="GarageManager.cs" />
+    <Compile Include="IFuelable.cs" />
     <Compile Include="Motorcycle.cs" />
     <Compile Include="Truck.cs" />
     <Compile Include="Utils.cs" />

@@ -56,7 +56,7 @@ namespace Ex03.GarageLogic
             Five,
         }
 
-        internal override void SetAdditionalInfo(string i_AdditionalInfo1, string i_AdditionalInfo2)
+        public override void SetAdditionalInfo(string i_AdditionalInfo1, string i_AdditionalInfo2)
         {
             m_Color = (eCarColor)Enum.Parse(typeof(eCarColor), i_AdditionalInfo1, false);
             m_NumOfDoors = (eNumOfDoors)Enum.Parse(typeof(eNumOfDoors), i_AdditionalInfo2, false);

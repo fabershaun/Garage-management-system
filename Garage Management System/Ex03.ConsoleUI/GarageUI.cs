@@ -148,11 +148,12 @@ namespace Ex03.ConsoleUI
             try
             {
                 // Parse and assign values from answers array
-                float energyPercentage = float.Parse(answers[1]);
+                float energyAmount = float.Parse(answers[1]);
                 string wheelManufacturer = answers[2];
                 float currentAirPressure = float.Parse(answers[3]);
 
-                vehicle.SetEnergyPercentage(energyPercentage);
+                vehicle.SetEnergyPercentage(energyAmount);
+                vehicle.SetEnergyAmountByAmount(energyAmount);
 
                 for (int i = 0; i < vehicle.Wheels.Count; i++)
                 {
@@ -188,6 +189,111 @@ namespace Ex03.ConsoleUI
             i_Vehicle.AddAdditionalQuestions(questionForType);
 
             return questionForType;
+        }
+
+        private void showLicenseNumbers()
+        {
+            Console.WriteLine("License plates currently in garage:");
+
+            foreach (string licensePlate in r_GarageManager.m_VehiclesInGarage.Keys)
+            {
+                Console.WriteLine($" - {licensePlate}");
+            }
+        }
+
+        private void changeVehicleStatus()
+        {
+            Console.Write("Enter license plate: ");
+            string licensePlate = Console.ReadLine();
+
+            if (!r_GarageManager.m_VehiclesInGarage.ContainsKey(licensePlate))
+            {
+                Console.WriteLine("No such vehicle found in the garage.");
+                return;
+            }
+
+            Console.WriteLine("Select new status:");
+            foreach (Utils.eGarageVehicleStatus status in Enum.GetValues(typeof(Utils.eGarageVehicleStatus)))
+            {
+                Console.WriteLine($"{(int)status}. {status}");
+            }
+
+            if (!int.TryParse(Console.ReadLine(), out int statusIndex) || !Enum.IsDefined(typeof(Utils.eGarageVehicleStatus), statusIndex))
+            {
+                Console.WriteLine("Invalid status selection.");
+                return;
+            }
+
+            r_GarageManager.m_VehiclesInGarage[licensePlate].Status = (Utils.eGarageVehicleStatus)statusIndex;
+            Console.WriteLine("Vehicle status updated successfully.");
+        }
+
+        private void inflateWheelsToMax()
+        {
+            Console.Write("Enter license plate: ");
+            string licensePlate = Console.ReadLine();
+
+            if (!r_GarageManager.m_VehiclesInGarage.TryGetValue(licensePlate, out VehicleInGarage vehicleInGarage))
+            {
+                Console.WriteLine("No such vehicle found in the garage.");
+                return;
+            }
+
+            foreach (Wheel wheel in vehicleInGarage.Vehicle.Wheels)
+            {
+                wheel.InflateToMax();
+            }
+
+            Console.WriteLine("All wheels inflated to maximum.");
+        }
+
+        private void refuelVehicle()
+        {
+            Console.Write("Enter license plate: ");
+            string licensePlate = Console.ReadLine();
+
+            if (!r_GarageManager.m_VehiclesInGarage.TryGetValue(licensePlate, out VehicleInGarage vehicleInGarage))
+            {
+                Console.WriteLine("No such vehicle found in the garage.");
+                return;
+            }
+
+            if(!vehicleInGarage.Vehicle.IsFuelType)
+            {
+                Console.WriteLine("This vehicle is not powered by fuel.");
+                return;
+            }
+
+            Console.WriteLine("Select fuel type:");
+            foreach (Utils.eFuelType type in Enum.GetValues(typeof(Utils.eFuelType)))
+            {
+                Console.WriteLine($"{(int)type}. {type}");
+            }
+
+            if (!int.TryParse(Console.ReadLine(), out int fuelTypeIndex) || !Enum.IsDefined(typeof(Utils.eFuelType), fuelTypeIndex))
+            {
+                Console.WriteLine("Invalid fuel type selection.");
+                return;
+            }
+
+            Console.Write("Enter amount of fuel to add (in liters): ");
+            if (!float.TryParse(Console.ReadLine(), out float amountToAdd))
+            {
+                Console.WriteLine("Invalid fuel amount.");
+                return;
+            }
+
+            try
+            {
+                vehicleInGarage.Vehicle.Refuel((Utils.eFuelType)fuelTypeIndex, amountToAdd);
+                Console.WriteLine("Vehicle refueled successfully.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to refuel vehicle: {ex.Message}");
+            }
+            
+
         }
     }
 }

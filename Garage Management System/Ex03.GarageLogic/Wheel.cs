@@ -22,19 +22,26 @@ namespace Ex03.GarageLogic
             r_MaxAirPressure = i_MaxAirPressure;
         }
 
-        private void inflate(float i_AirPressureToAdd)
+        public void Inflate(float i_AirPressureToAdd)
         {
+            if (i_AirPressureToAdd < 0)
+            {
+                throw new ValueRangeException(i_AirPressureToAdd, 0, r_MaxAirPressure);
+            }
+
             float newAirPressure = m_CurrentAirPressure + i_AirPressureToAdd;
 
-            if(newAirPressure > r_MaxAirPressure || newAirPressure < 0)
+            if (newAirPressure > r_MaxAirPressure)
             {
-                throw new ArgumentException(
-                    $"Air pressure must be between 0 and {r_MaxAirPressure}. Resulting pressure would be {newAirPressure}");
+                throw new ValueRangeException(newAirPressure, 0, r_MaxAirPressure);
             }
 
             m_CurrentAirPressure = newAirPressure;
+        }
 
-            //Add exception of negative air pressure to add
+        public void InflateToMax()
+        {
+            m_CurrentAirPressure = r_MaxAirPressure;
         }
 
 

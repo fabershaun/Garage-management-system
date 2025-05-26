@@ -29,6 +29,13 @@
             }
         }
 
+        internal float MaxFuelAmount
+        {
+            get
+            {
+                return r_MaxFuelAmount;
+            }
+        }
 
         internal void AddFuel(float i_AmountToAdd)
         {

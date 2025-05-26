@@ -14,7 +14,7 @@ namespace Ex03.GarageLogic
             Repaired,
             Paid,
         }
-        internal enum eFuelType
+        public enum eFuelType
         {
             Octan95,
             Octan96,
