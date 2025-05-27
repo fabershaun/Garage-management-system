@@ -14,12 +14,5 @@ namespace Ex03.GarageLogic
             Repaired,
             Paid,
         }
-        public enum eFuelType
-        {
-            Octan95,
-            Octan96,
-            Octan98,
-            Soler,
-        }
     }
 }

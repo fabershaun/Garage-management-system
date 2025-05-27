@@ -49,8 +49,8 @@ namespace Ex03.GarageLogic
 
                     Vehicle vehicle = VehicleCreator.CreateVehicle(partsOfLine[0], partsOfLine[1], partsOfLine[2]);
 
-                    vehicle.EnergyPercentage = energyPercentage;
-                    vehicle.SetEnergyAmountByPercentage(energyPercentage);
+                    vehicle.Engine.EnergyPercentage = energyPercentage;
+                    vehicle.Engine.CurrentEnergyAmount = vehicle.Engine.MaxEnergyAmount * (energyPercentage / 100);
 
                     foreach (Wheel wheel in vehicle.Wheels)
                     {

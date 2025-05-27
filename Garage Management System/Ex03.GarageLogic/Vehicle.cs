@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using static Ex03.GarageLogic.Utils;
 
 namespace Ex03.GarageLogic
 {
@@ -11,8 +12,8 @@ namespace Ex03.GarageLogic
     {
         protected readonly string r_ModelName;
         protected readonly string r_LicenseNumber;
-        protected float m_EnergyPercentage;
         protected List<Wheel> m_Wheels;
+        protected Engine m_Engine;
 
         protected Vehicle(string i_LicenseNumber, string i_ModelName)
         {
@@ -27,12 +28,13 @@ namespace Ex03.GarageLogic
             r_ModelName = i_ModelName;
             r_LicenseNumber = i_LicenseNumber;
         }
-
-
-        public float EnergyPercentage
+        
+        public Engine Engine
         {
-            get { return m_EnergyPercentage; }
-            set { m_EnergyPercentage = value; }
+            get
+            {
+                return m_Engine;
+            }
         }
 
         public List<Wheel> Wheels
@@ -46,14 +48,6 @@ namespace Ex03.GarageLogic
                 m_Wheels = value ?? throw new ArgumentNullException("value");
             }
         }
-   
-        public abstract void SetEnergyPercentage(float i_EnergyAmount);
-
-        public abstract void SetEnergyAmountByPercentage(float i_EnergyPercentage);
-        
-        public abstract void SetEnergyAmountByAmount(float i_EnergyAmount);
-
-
         
         public override string ToString()
         {
@@ -70,15 +64,18 @@ namespace Ex03.GarageLogic
             vehicleInfo.AppendLine($"Wheel Max Air pressure: {m_Wheels[0].MaxAirPressure}");
             vehicleInfo.AppendLine();
 
-            vehicleInfo.AppendLine(GetEngineDescription());
+            vehicleInfo.AppendLine(m_Engine.ToString());
 
             return vehicleInfo.ToString();
         }
 
-        public abstract string GetEngineDescription();
-
         public abstract void SetAdditionalInfo(string i_AdditionalInfo1, string i_AdditionalInfo2);
 
         public abstract void AddAdditionalQuestions(List<string> io_QuestionsList);
+
+        public void AddEnergy(float i_AmountToAdd)
+        {
+            m_Engine.AddEnergy(i_AmountToAdd);
+        }
     }
 }

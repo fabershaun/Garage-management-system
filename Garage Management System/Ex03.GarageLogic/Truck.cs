@@ -1,20 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static Ex03.GarageLogic.Car;
-using static Ex03.GarageLogic.Utils;
+using static Ex03.GarageLogic.FuelEngine;
 
 namespace Ex03.GarageLogic
 {
-    internal class Truck : Vehicle, IFuelable
+    internal class Truck : Vehicle
     {
         private const int k_MaxAirPressureOfTruck = 27;
         private const int k_NumOfTruckWheels = 12;
         private const float k_MaxFuel = 135F;
-        private const Utils.eFuelType k_FuelType = Utils.eFuelType.Soler;
-        internal FuelEngine m_Engine;
+        private const eFuelType k_FuelType = eFuelType.Soler;
 
         private bool m_CarriesHazardousMaterials;
         private float m_CargoVolume;
@@ -32,35 +27,7 @@ namespace Ex03.GarageLogic
 
             Wheels = wheels;
         }
-
-        public void Refuel(Utils.eFuelType i_FuelType, float i_Amount)
-        {
-            if (i_FuelType != k_FuelType)
-            {
-                throw new ArgumentException("Incorrect fuel type.");
-            }
-
-            if (i_Amount < 0)
-            {
-                throw new ValueRangeException(i_Amount, 0, m_Engine.MaxFuelAmount);
-            }
-
-            float newFuelAmount = m_Engine.CurrentFuelAmount + i_Amount;
-
-            if (newFuelAmount > m_Engine.MaxFuelAmount)
-            {
-                throw new ValueRangeException(newFuelAmount, 0, m_Engine.MaxFuelAmount);
-            }
-
-            SetEnergyAmountByAmount(newFuelAmount);
-            SetEnergyPercentage(newFuelAmount);
-        }
-
-        public override string GetEngineDescription()
-        {
-            return m_Engine.ToString();
-        }
-
+        
         internal bool CarriesHazardousMaterials
         {
             get { return m_CarriesHazardousMaterials; }
@@ -92,21 +59,6 @@ namespace Ex03.GarageLogic
         {
             io_QuestionsList.Add("If carries hazardous materials type 'true' else type 'false'");
             io_QuestionsList.Add("Cargo volume");
-        }
-
-        public override void SetEnergyPercentage(float i_EnergyAmount)
-        {
-            m_EnergyPercentage = i_EnergyAmount * 100.0f / k_MaxFuel;
-        }
-
-        public override void SetEnergyAmountByPercentage(float i_EnergyPercentage)
-        {
-            m_Engine.CurrentFuelAmount = i_EnergyPercentage / 100.0f * k_MaxFuel;
-        }
-
-        public override void SetEnergyAmountByAmount(float i_EnergyAmount)
-        {
-            m_Engine.CurrentFuelAmount = i_EnergyAmount;
         }
     }
 }
