@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Ex03.GarageLogic;
 
 namespace Ex03.ConsoleUI
@@ -57,7 +55,8 @@ namespace Ex03.ConsoleUI
 
                 if(!exitRequested)
                 {
-                    Console.WriteLine("\nPress Enter to continue...");
+                    Console.WriteLine();
+                    Console.WriteLine("Press Enter to continue...");
                     Console.ReadLine();
                     Console.Clear();
                 }
@@ -111,6 +110,8 @@ namespace Ex03.ConsoleUI
 
         private void insertNewVehicle()
         {
+            string message;
+
             Console.Write("Enter license plate: ");
             string licensePlateInput = Console.ReadLine();
             string licensePlate;
@@ -119,124 +120,152 @@ namespace Ex03.ConsoleUI
             {
                 licensePlate = formatLicensePlate(licensePlateInput);
             }
-            catch(FormatException ex)
+            catch (FormatException ex)
             {
-                Console.WriteLine("Invalid license plate format: " + ex.Message);
+                message = "Invalid license plate format: " + ex.Message;
+                Console.WriteLine(message);
                 return;
             }
+
             if (r_GarageManager.m_VehiclesInGarage.ContainsKey(licensePlate))
             {
-                Console.WriteLine("Vehicle already exists in the garage.");
-                return;
-            }
-
-            Console.WriteLine("Select vehicle type:");
-            List<string> supportedTypes = VehicleCreator.SupportedTypes;
-
-            for (int i = 0; i < supportedTypes.Count; i++)
-            {
-                Console.WriteLine($"{i + 1}. {supportedTypes[i]}");
-            }
-
-            int typeIndex = int.Parse(Console.ReadLine()) - 1;      // Get the user choice for vehicle type
-            string selectedType = supportedTypes[typeIndex];
-
-            Console.WriteLine("Enter Model name:");
-            string modelName = Console.ReadLine();
-
-            Vehicle vehicle = VehicleCreator.CreateVehicle(selectedType, licensePlate, modelName);
-            
-            List<string> questionsForType = getQuestionsForType(vehicle);
-            string[] answers = new string[questionsForType.Count];
-
-            for (int i = 0; i < questionsForType.Count; i++)
-            {
-                Console.Write(questionsForType[i] + ": ");
-                answers[i] = Console.ReadLine();
-            }
-
-            try
-            {
-                // Parse and assign values from answers array
-                float energyAmount = float.Parse(answers[1]);
-                string wheelManufacturer = answers[2];
-                float currentAirPressure = float.Parse(answers[3]);
-
-                vehicle.SetEnergyPercentage(energyAmount);
-                vehicle.SetEnergyAmountByAmount(energyAmount);
-
-                for (int i = 0; i < vehicle.Wheels.Count; i++)
-                {
-                    vehicle.Wheels[i].Manufacturer = wheelManufacturer;
-                    vehicle.Wheels[i].CurrentAirPressure = currentAirPressure;
-                }
-
-                vehicle.SetAdditionalInfo(answers[4], answers[5]);
-                Console.Write("Enter owner's name: ");
-                string ownerName = Console.ReadLine();
-                Console.Write("Enter owner's phone number: ");
-                string ownerPhone = Console.ReadLine();
-
-                VehicleInGarage vehicleInGarage = new VehicleInGarage(ownerName, ownerPhone, Utils.eGarageVehicleStatus.InRepair, vehicle);
-                r_GarageManager.m_VehiclesInGarage.Add(licensePlate, vehicleInGarage);
-
-                Console.WriteLine("Vehicle inserted successfully.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to insert vehicle: {ex.Message}");
-            }
-        }
-
-        private string formatLicensePlate(string i_LicensePlateRaw)
-        {
-            // Check for invalid characters
-            foreach (char c in i_LicensePlateRaw)
-            {
-                if (!char.IsDigit(c) && c != '-')
-                {
-                    throw new FormatException("License plate contains invalid characters. Only digits and hyphens are allowed.");
-                }
-            }
-
-            // If input already contains hyphens and is of acceptable length, assume it's valid
-            if (i_LicensePlateRaw.Contains("-") && (i_LicensePlateRaw.Length == 9 || i_LicensePlateRaw.Length == 10))
-            {
-                return i_LicensePlateRaw;
-            }
-
-            // Remove all non-digit characters manually
-            StringBuilder cleanedBuilder = new StringBuilder();
-            foreach (char c in i_LicensePlateRaw)
-            {
-                if (char.IsDigit(c))
-                {
-                    cleanedBuilder.Append(c);
-                }
-            }
-            string cleaned = cleanedBuilder.ToString();
-
-            if (cleaned.Length == 7)
-            {
-                return cleaned.Substring(0, 2) + "-" + cleaned.Substring(2, 3) + "-" + cleaned.Substring(5, 2);
-            }
-            else if (cleaned.Length == 8)
-            {
-                return cleaned.Substring(0, 3) + "-" + cleaned.Substring(3, 3) + "-" + cleaned.Substring(6, 2);
+                message = "Vehicle already exists in the garage.";
             }
             else
             {
-                throw new FormatException("License plate must contain 7 or 8 digits.");
+                Console.WriteLine("Select vehicle type:");
+                List<string> supportedTypes = VehicleCreator.SupportedTypes;
+
+                for (int i = 0; i < supportedTypes.Count; i++)
+                {
+                    Console.WriteLine($"{i + 1}. {supportedTypes[i]}");
+                }
+
+                if (!int.TryParse(Console.ReadLine(), out int typeIndex) || typeIndex < 1 || typeIndex > supportedTypes.Count)
+                {
+                    message = "Invalid vehicle type selection.";
+                }
+                else
+                {
+                    string selectedType = supportedTypes[typeIndex - 1];
+
+                    Console.Write("Enter Model name: ");
+                    string modelName = Console.ReadLine();
+
+                    Vehicle vehicle = VehicleCreator.CreateVehicle(selectedType, licensePlate, modelName);
+
+                    List<string> questionsForType = getQuestionsForType(vehicle);
+                    string[] answers = new string[questionsForType.Count];
+
+                    for (int i = 0; i < questionsForType.Count; i++)
+                    {
+                        Console.Write(questionsForType[i] + ": ");
+                        answers[i] = Console.ReadLine();
+                    }
+
+                    try
+                    {
+                        float energyAmount = float.Parse(answers[1]);
+                        string wheelManufacturer = answers[2];
+                        float currentAirPressure = float.Parse(answers[3]);
+
+                        vehicle.SetEnergyPercentage(energyAmount);
+                        vehicle.SetEnergyAmountByAmount(energyAmount);
+
+                        foreach (Wheel wheel in vehicle.Wheels)
+                        {
+                            wheel.Manufacturer = wheelManufacturer;
+                            wheel.CurrentAirPressure = currentAirPressure;
+                        }
+
+                        vehicle.SetAdditionalInfo(answers[4], answers[5]);
+
+                        Console.Write("Enter owner's name: ");
+                        string ownerName = Console.ReadLine();
+                        Console.Write("Enter owner's phone number: ");
+                        string ownerPhone = Console.ReadLine();
+
+                        VehicleInGarage vehicleInGarage = new VehicleInGarage(ownerName, ownerPhone, Utils.eGarageVehicleStatus.InRepair, vehicle);
+                        r_GarageManager.m_VehiclesInGarage.Add(licensePlate, vehicleInGarage);
+
+                        message = "Vehicle inserted successfully.";
+                    }
+                    catch (Exception ex)
+                    {
+                        message = $"Failed to insert vehicle: {ex.Message}";
+                    }
+                }
             }
+
+            Console.WriteLine(message);
         }
+
+        private static string formatLicensePlate(string i_LicensePlateRaw)
+        {
+            string formattedPlate;
+
+            bool isValid = true;
+            foreach(char c in i_LicensePlateRaw)
+            {
+                if (!char.IsDigit(c) && c != '-')
+                {
+                    isValid = false;
+                    break;
+                }
+            }
+
+            if (!isValid)
+            {
+                formattedPlate = null;
+            }
+            else if (i_LicensePlateRaw.Contains("-") && (i_LicensePlateRaw.Length == 9 || i_LicensePlateRaw.Length == 10))
+            {
+                formattedPlate = i_LicensePlateRaw;
+            }
+            else
+            {
+                StringBuilder cleanedBuilder = new StringBuilder();
+                foreach(char c in i_LicensePlateRaw)
+                {
+                    if (char.IsDigit(c))
+                    {
+                        cleanedBuilder.Append(c);
+                    }
+                }
+
+                string cleaned = cleanedBuilder.ToString();
+
+                switch(cleaned.Length)
+                {
+                    case 7:
+                        formattedPlate = cleaned.Substring(0, 2) + "-" + cleaned.Substring(2, 3) + "-" + cleaned.Substring(5, 2);
+                        break;
+                    case 8:
+                        formattedPlate = cleaned.Substring(0, 3) + "-" + cleaned.Substring(3, 3) + "-" + cleaned.Substring(6, 2);
+                        break;
+                    default:
+                        formattedPlate = null;
+                        break;
+                }
+            }
+
+            if (formattedPlate == null)
+            {
+                throw new FormatException("License plate is invalid. Use 7 or 8 digits, digits and hyphens only.");
+            }
+
+            return formattedPlate;
+        }
+
         private List<string> getQuestionsForType(Vehicle i_Vehicle)
         {
-            List<string> questionForType = new List<string>();
-
-            questionForType.Add("Model name");
-            questionForType.Add("Energy percentage");
-            questionForType.Add("Wheel manufacturer");
-            questionForType.Add("Current wheel air pressure");
+            List<string> questionForType = new List<string>
+            {
+                "Model name",
+                "Energy percentage",
+                "Wheel manufacturer",
+                "Current wheel air pressure"
+            };
             i_Vehicle.AddAdditionalQuestions(questionForType);
 
             return questionForType;
@@ -257,26 +286,32 @@ namespace Ex03.ConsoleUI
             Console.Write("Enter license plate: ");
             string licensePlate = Console.ReadLine();
 
+            string message;
+
             if (!r_GarageManager.m_VehiclesInGarage.ContainsKey(licensePlate))
             {
-                Console.WriteLine("No such vehicle found in the garage.");
-                return;
+                message = "No such vehicle found in the garage.";
             }
-
-            Console.WriteLine("Select new status:");
-            foreach (Utils.eGarageVehicleStatus status in Enum.GetValues(typeof(Utils.eGarageVehicleStatus)))
+            else
             {
-                Console.WriteLine($"{(int)status}. {status}");
+                Console.WriteLine("Select new status:");
+                foreach (Utils.eGarageVehicleStatus status in Enum.GetValues(typeof(Utils.eGarageVehicleStatus)))
+                {
+                    Console.WriteLine($"{(int)status}. {status}");
+                }
+
+                if (!int.TryParse(Console.ReadLine(), out int statusIndex) || !Enum.IsDefined(typeof(Utils.eGarageVehicleStatus), statusIndex))
+                {
+                    message = "Invalid status selection.";
+                }
+                else
+                {
+                    r_GarageManager.m_VehiclesInGarage[licensePlate].Status = (Utils.eGarageVehicleStatus)statusIndex;
+                    message = "Vehicle status updated successfully.";
+                }
             }
 
-            if (!int.TryParse(Console.ReadLine(), out int statusIndex) || !Enum.IsDefined(typeof(Utils.eGarageVehicleStatus), statusIndex))
-            {
-                Console.WriteLine("Invalid status selection.");
-                return;
-            }
-
-            r_GarageManager.m_VehiclesInGarage[licensePlate].Status = (Utils.eGarageVehicleStatus)statusIndex;
-            Console.WriteLine("Vehicle status updated successfully.");
+            Console.WriteLine(message);
         }
 
         private void inflateWheelsToMax()
@@ -300,94 +335,104 @@ namespace Ex03.ConsoleUI
 
         private void refuelVehicle()
         {
+            string message;
+
             Console.Write("Enter license plate: ");
             string licensePlate = Console.ReadLine();
 
             if (!r_GarageManager.m_VehiclesInGarage.TryGetValue(licensePlate, out VehicleInGarage vehicleInGarage))
             {
-                Console.WriteLine("No such vehicle found in the garage.");
-                return;
+                message = "No such vehicle found in the garage.";
             }
-
-            IFuelable fuelableVehicle = vehicleInGarage.Vehicle as IFuelable;
-
-            if (fuelableVehicle == null)
+            else
             {
-                Console.WriteLine("This vehicle is not powered by fuel.");
-                return;
+                if (!(vehicleInGarage.Vehicle is IFuelable fuelableVehicle))
+                {
+                    message = "This vehicle is not powered by fuel.";
+                }
+                else
+                {
+                    Console.WriteLine("Select fuel type:");
+                    foreach (Utils.eFuelType type in Enum.GetValues(typeof(Utils.eFuelType)))
+                    {
+                        Console.WriteLine($"{(int)type}. {type}");
+                    }
+
+                    if (!int.TryParse(Console.ReadLine(), out int fuelTypeIndex) || !Enum.IsDefined(typeof(Utils.eFuelType), fuelTypeIndex))
+                    {
+                        message = "Invalid fuel type selection.";
+                    }
+                    else
+                    {
+                        Console.Write("Enter amount of fuel to add (in liters): ");
+                        if (!float.TryParse(Console.ReadLine(), out float amountToAdd))
+                        {
+                            message = "Invalid fuel amount.";
+                        }
+                        else
+                        {
+                            try
+                            {
+                                fuelableVehicle.Refuel((Utils.eFuelType)fuelTypeIndex, amountToAdd);
+                                message = "Vehicle refueled successfully.";
+                            }
+                            catch (Exception ex)
+                            {
+                                message = $"Failed to refuel vehicle: {ex.Message}";
+                            }
+                        }
+                    }
+                }
             }
 
-            Console.WriteLine("Select fuel type:");
-
-            foreach (Utils.eFuelType type in Enum.GetValues(typeof(Utils.eFuelType)))
-            {
-                Console.WriteLine($"{(int)type}. {type}");
-            }
-
-            if (!int.TryParse(Console.ReadLine(), out int fuelTypeIndex) || !Enum.IsDefined(typeof(Utils.eFuelType), fuelTypeIndex))
-            {
-                Console.WriteLine("Invalid fuel type selection.");
-                return;
-            }
-
-            Console.Write("Enter amount of fuel to add (in liters): ");
-            if (!float.TryParse(Console.ReadLine(), out float amountToAdd))
-            {
-                Console.WriteLine("Invalid fuel amount.");
-                return;
-            }
-
-            try
-            {
-                fuelableVehicle.Refuel((Utils.eFuelType)fuelTypeIndex, amountToAdd);
-                Console.WriteLine("Vehicle refueled successfully.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to refuel vehicle: {ex.Message}");
-            }
+            Console.WriteLine(message);
         }
 
         private void chargeVehicle()
         {
+            string message;
+
             Console.Write("Enter license plate: ");
             string licensePlate = Console.ReadLine();
 
             if (!r_GarageManager.m_VehiclesInGarage.TryGetValue(licensePlate, out VehicleInGarage vehicleInGarage))
             {
-                Console.WriteLine("No such vehicle found in the garage.");
-                return;
+                message = "No such vehicle found in the garage.";
+            }
+            else
+            {
+                if (!(vehicleInGarage.Vehicle is IRechargeable rechargeableVehicle))
+                {
+                    message = "This vehicle is not electric.";
+                }
+                else
+                {
+                    Console.Write("Enter number of hours to charge (can be decimal): ");
+                    if (!float.TryParse(Console.ReadLine(), out float hoursToCharge))
+                    {
+                        message = "Invalid number of hours.";
+                    }
+                    else
+                    {
+                        try
+                        {
+                            rechargeableVehicle.Recharge(hoursToCharge);
+                            message = "Vehicle charged successfully.";
+                        }
+                        catch (Exception ex)
+                        {
+                            message = $"Failed to charge vehicle: {ex.Message}";
+                        }
+                    }
+                }
             }
 
-            IRechargeable rechargeableVehicle = vehicleInGarage.Vehicle as IRechargeable;
-
-            if (rechargeableVehicle == null)
-            {
-                Console.WriteLine("This vehicle is not electric.");
-                return;
-            }
-
-            Console.Write("Enter number of hours to charge (can be decimal): ");
-            if (!float.TryParse(Console.ReadLine(), out float hoursToCharge))
-            {
-                Console.WriteLine("Invalid number of hours.");
-                return;
-            }
-
-            try
-            {
-                rechargeableVehicle.Recharge(hoursToCharge);
-                Console.WriteLine("Vehicle charged successfully.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to charge vehicle: {ex.Message}");
-            }
+            Console.WriteLine(message);
         }
 
         private void showVehicleDetails()
         {
-            Console.Write("Enter license plate: ");
+            Console.Write("Enter license plate (XX-XXX-XX): ");
             string licensePlate = Console.ReadLine();
 
             if (!r_GarageManager.m_VehiclesInGarage.TryGetValue(licensePlate, out VehicleInGarage vehicleInGarage))
@@ -396,7 +441,8 @@ namespace Ex03.ConsoleUI
                 return;
             }
 
-            Console.WriteLine("\n=== Vehicle Details ===");
+            Console.WriteLine();
+            Console.WriteLine("=== Vehicle Details ===");
             Console.WriteLine(vehicleInGarage);
         }
     }
