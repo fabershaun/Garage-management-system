@@ -13,8 +13,6 @@ namespace Ex03.GarageLogic
         protected readonly string r_LicenseNumber;
         protected float m_EnergyPercentage;
         protected List<Wheel> m_Wheels;
-        protected bool m_IsFuelType;
-        protected bool m_IsElectricType;
 
         protected Vehicle(string i_LicenseNumber, string i_ModelName)
         {
@@ -37,33 +35,18 @@ namespace Ex03.GarageLogic
             set { m_EnergyPercentage = value; }
         }
 
-        public bool IsFuelType
-        {
-            get { return m_IsFuelType; }
-            set { m_IsFuelType = value; }
-        }
-
-        public bool IsElectricType
-        {
-            get { return m_IsElectricType; }
-            set { m_IsElectricType = value; }
-        }
-
         public List<Wheel> Wheels
         {
-            get { return m_Wheels; }
-            set { m_Wheels = setWheels(value); }
-        }
-        private List<Wheel> setWheels(List<Wheel> i_Wheels)
-        {
-            if (i_Wheels == null)
+            get
             {
-                throw new ArgumentNullException("i_Wheels");
+                return m_Wheels;
             }
-
-            return i_Wheels;
+            set
+            {
+                m_Wheels = value ?? throw new ArgumentNullException("value");
+            }
         }
-
+   
         public abstract void SetEnergyPercentage(float i_EnergyAmount);
 
         public abstract void SetEnergyAmountByPercentage(float i_EnergyPercentage);
@@ -83,10 +66,16 @@ namespace Ex03.GarageLogic
 
             vehicleInfo.AppendLine("-----\tTIERS\t-----");
             vehicleInfo.AppendLine($"Wheel Manufacture: {m_Wheels[0].Manufacturer}");
-            vehicleInfo.AppendLine($"Wheel Current Air pressure:\t{m_Wheels[0].CurrentAirPressure}");
+            vehicleInfo.AppendLine($"Wheel Current Air pressure: {m_Wheels[0].CurrentAirPressure}");
+            vehicleInfo.AppendLine($"Wheel Max Air pressure: {m_Wheels[0].MaxAirPressure}");
+            vehicleInfo.AppendLine();
+
+            vehicleInfo.AppendLine(GetEngineDescription());
 
             return vehicleInfo.ToString();
         }
+
+        public abstract string GetEngineDescription();
 
         public abstract void SetAdditionalInfo(string i_AdditionalInfo1, string i_AdditionalInfo2);
 

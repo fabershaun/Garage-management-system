@@ -112,8 +112,18 @@ namespace Ex03.ConsoleUI
         private void insertNewVehicle()
         {
             Console.Write("Enter license plate: ");
-            string licensePlate = Console.ReadLine();
+            string licensePlateInput = Console.ReadLine();
+            string licensePlate;
 
+            try
+            {
+                licensePlate = formatLicensePlate(licensePlateInput);
+            }
+            catch(FormatException ex)
+            {
+                Console.WriteLine("Invalid license plate format: " + ex.Message);
+                return;
+            }
             if (r_GarageManager.m_VehiclesInGarage.ContainsKey(licensePlate))
             {
                 Console.WriteLine("Vehicle already exists in the garage.");
@@ -178,6 +188,47 @@ namespace Ex03.ConsoleUI
             }
         }
 
+        private string formatLicensePlate(string i_LicensePlateRaw)
+        {
+            // Check for invalid characters
+            foreach (char c in i_LicensePlateRaw)
+            {
+                if (!char.IsDigit(c) && c != '-')
+                {
+                    throw new FormatException("License plate contains invalid characters. Only digits and hyphens are allowed.");
+                }
+            }
+
+            // If input already contains hyphens and is of acceptable length, assume it's valid
+            if (i_LicensePlateRaw.Contains("-") && (i_LicensePlateRaw.Length == 9 || i_LicensePlateRaw.Length == 10))
+            {
+                return i_LicensePlateRaw;
+            }
+
+            // Remove all non-digit characters manually
+            StringBuilder cleanedBuilder = new StringBuilder();
+            foreach (char c in i_LicensePlateRaw)
+            {
+                if (char.IsDigit(c))
+                {
+                    cleanedBuilder.Append(c);
+                }
+            }
+            string cleaned = cleanedBuilder.ToString();
+
+            if (cleaned.Length == 7)
+            {
+                return cleaned.Substring(0, 2) + "-" + cleaned.Substring(2, 3) + "-" + cleaned.Substring(5, 2);
+            }
+            else if (cleaned.Length == 8)
+            {
+                return cleaned.Substring(0, 3) + "-" + cleaned.Substring(3, 3) + "-" + cleaned.Substring(6, 2);
+            }
+            else
+            {
+                throw new FormatException("License plate must contain 7 or 8 digits.");
+            }
+        }
         private List<string> getQuestionsForType(Vehicle i_Vehicle)
         {
             List<string> questionForType = new List<string>();
@@ -258,13 +309,16 @@ namespace Ex03.ConsoleUI
                 return;
             }
 
-            if(!vehicleInGarage.Vehicle.IsFuelType)
+            IFuelable fuelableVehicle = vehicleInGarage.Vehicle as IFuelable;
+
+            if (fuelableVehicle == null)
             {
                 Console.WriteLine("This vehicle is not powered by fuel.");
                 return;
             }
 
             Console.WriteLine("Select fuel type:");
+
             foreach (Utils.eFuelType type in Enum.GetValues(typeof(Utils.eFuelType)))
             {
                 Console.WriteLine($"{(int)type}. {type}");
@@ -285,15 +339,65 @@ namespace Ex03.ConsoleUI
 
             try
             {
-                vehicleInGarage.Vehicle.Refuel((Utils.eFuelType)fuelTypeIndex, amountToAdd);
+                fuelableVehicle.Refuel((Utils.eFuelType)fuelTypeIndex, amountToAdd);
                 Console.WriteLine("Vehicle refueled successfully.");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Failed to refuel vehicle: {ex.Message}");
             }
-            
+        }
 
+        private void chargeVehicle()
+        {
+            Console.Write("Enter license plate: ");
+            string licensePlate = Console.ReadLine();
+
+            if (!r_GarageManager.m_VehiclesInGarage.TryGetValue(licensePlate, out VehicleInGarage vehicleInGarage))
+            {
+                Console.WriteLine("No such vehicle found in the garage.");
+                return;
+            }
+
+            IRechargeable rechargeableVehicle = vehicleInGarage.Vehicle as IRechargeable;
+
+            if (rechargeableVehicle == null)
+            {
+                Console.WriteLine("This vehicle is not electric.");
+                return;
+            }
+
+            Console.Write("Enter number of hours to charge (can be decimal): ");
+            if (!float.TryParse(Console.ReadLine(), out float hoursToCharge))
+            {
+                Console.WriteLine("Invalid number of hours.");
+                return;
+            }
+
+            try
+            {
+                rechargeableVehicle.Recharge(hoursToCharge);
+                Console.WriteLine("Vehicle charged successfully.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to charge vehicle: {ex.Message}");
+            }
+        }
+
+        private void showVehicleDetails()
+        {
+            Console.Write("Enter license plate: ");
+            string licensePlate = Console.ReadLine();
+
+            if (!r_GarageManager.m_VehiclesInGarage.TryGetValue(licensePlate, out VehicleInGarage vehicleInGarage))
+            {
+                Console.WriteLine("No such vehicle found in the garage.");
+                return;
+            }
+
+            Console.WriteLine("\n=== Vehicle Details ===");
+            Console.WriteLine(vehicleInGarage);
         }
     }
 }

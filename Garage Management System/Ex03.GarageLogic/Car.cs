@@ -24,7 +24,7 @@ namespace Ex03.GarageLogic
                 wheels.Add(new Wheel(k_MaxAirPressureOfCar));
             }
 
-            SetWheels(wheels);
+            Wheels = wheels;
         }
 
         

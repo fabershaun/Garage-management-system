@@ -9,13 +9,11 @@ namespace Ex03.GarageLogic
     {
         internal FuelEngine m_Engine;
         private const float k_MaxFuel = 48F;
-        private const Utils.eFuelType k_FuelType = Utils.eFuelType.Octan95;
+        private const eFuelType k_FuelType = eFuelType.Octan95;
 
         internal FuelCar(string i_LicenseNumber, string i_ModelName) : base(i_LicenseNumber, i_ModelName) 
         {
             m_Engine = new FuelEngine(k_MaxFuel, k_FuelType);
-            m_IsFuelType = true;
-            m_IsElectricType = false;
         }
 
         public void Refuel(Utils.eFuelType i_FuelType, float i_Amount)
@@ -41,9 +39,9 @@ namespace Ex03.GarageLogic
             SetEnergyPercentage(newFuelAmount);
         }
 
-        internal void ConvertPercentageToAmount()
+        public override string GetEngineDescription()
         {
-            m_Engine.CurrentFuelAmount = (float)(k_MaxFuel * (EnergyPercentage / 100.0f));
+            return m_Engine.ToString(); 
         }
 
         public override void SetEnergyPercentage(float i_EnergyAmount)

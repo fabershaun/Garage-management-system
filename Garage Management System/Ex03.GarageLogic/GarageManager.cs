@@ -25,14 +25,14 @@ namespace Ex03.GarageLogic
 
                     string[] partsOfLine = line.Split(',');
 
+                    if (!VehicleCreator.SupportedTypes.Contains(partsOfLine[0]))
+                    {
+                        continue;
+                    }
+
                     if (partsOfLine.Length < 10)
                     {
                         errorMessages.Add($"Too few fields in line: {line}");
-                        continue;
-                    }
-                    
-                    if (!VehicleCreator.SupportedTypes.Contains(partsOfLine[0]))
-                    {
                         continue;
                     }
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Ex03.GarageLogic.Utils;
 
 namespace Ex03.GarageLogic
 {
@@ -32,6 +33,11 @@ namespace Ex03.GarageLogic
             }
         }
 
+        public float MaxBatteryHours
+        {
+            get { return r_BatteryMaxHours; }
+        }
+
         internal void ChargeBattery(float i_HoursToAdd)
         {
             if (i_HoursToAdd < 0)
@@ -47,6 +53,19 @@ namespace Ex03.GarageLogic
             }
 
             m_BatteryHoursLeft = projectedBatteryHours;
+        }
+
+        public override string ToString()
+        {
+            StringBuilder engineInfo = new StringBuilder();
+
+            engineInfo.AppendLine("-----\tENGINE\t-----");
+            engineInfo.AppendLine($"Engine Type:\tElectric");
+            engineInfo.AppendLine($"Current Fuel Amount:\t{CurrentHours}");
+            engineInfo.AppendLine($"Max Fuel Amount:\t{MaxBatteryHours}");
+            engineInfo.AppendLine();
+
+            return engineInfo.ToString();
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using static Ex03.GarageLogic.Utils;
 
 namespace Ex03.GarageLogic
@@ -30,27 +31,11 @@ namespace Ex03.GarageLogic
         internal string OwnerName
         {
             get { return m_OwnerName; }
-            set
-            {
-                if (string.IsNullOrEmpty(value))
-                {
-                    throw new ArgumentNullException("value", "Owner name cannot be null or empty");
-                }
-                m_OwnerName = value;
-            }
         }
 
         internal string OwnerPhoneNumber
         {
             get { return m_OwnerPhoneNumber; }
-            set
-            {
-                if (string.IsNullOrEmpty(value))
-                {
-                    throw new ArgumentNullException("value", "Owner phone number cannot be null or empty");
-                }
-                m_OwnerPhoneNumber = value;
-            }
         }
 
         public eGarageVehicleStatus Status
@@ -70,6 +55,20 @@ namespace Ex03.GarageLogic
                 }
                 m_Vehicle = value;
             }
+        }
+
+        public override string ToString()
+        {
+            StringBuilder details = new StringBuilder();
+
+            details.AppendLine("----- Vehicle In Garage -----");
+            details.AppendLine($"Owner Name:\t{OwnerName}");
+            details.AppendLine($"Owner Phone:\t{OwnerPhoneNumber}");
+            details.AppendLine($"Status:\t\t{Status}");
+            details.AppendLine();
+            details.AppendLine(Vehicle.ToString());
+
+            return details.ToString();
         }
     }
 }

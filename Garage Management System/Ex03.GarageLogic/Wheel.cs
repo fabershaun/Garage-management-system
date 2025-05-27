@@ -43,8 +43,7 @@ namespace Ex03.GarageLogic
         {
             m_CurrentAirPressure = r_MaxAirPressure;
         }
-
-
+        
         public string Manufacturer
         {
             get
@@ -79,6 +78,14 @@ namespace Ex03.GarageLogic
                 }
 
                 m_CurrentAirPressure = value;
+            }
+        }
+
+        internal float MaxAirPressure
+        {
+            get
+            {
+                return r_MaxAirPressure;
             }
         }
     }

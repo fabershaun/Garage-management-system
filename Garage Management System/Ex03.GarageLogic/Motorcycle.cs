@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Ex03.GarageLogic
 {
-    internal class Motorcycle : Vehicle
+    internal abstract class Motorcycle : Vehicle
     {
         private const int k_MaxAirPressureOfMotorcycle = 30;
         private const int k_NumOfMotorcycleWheels = 2;
@@ -21,7 +21,8 @@ namespace Ex03.GarageLogic
             {
                 wheels.Add(new Wheel(k_MaxAirPressureOfMotorcycle));
             }
-            SetWheels(wheels);
+
+            Wheels = wheels;
         }
 
         internal eLicenseType LicenseType

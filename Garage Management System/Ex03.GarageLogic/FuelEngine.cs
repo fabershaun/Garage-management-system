@@ -1,4 +1,7 @@
-﻿namespace Ex03.GarageLogic
+﻿using System.Text;
+using static Ex03.GarageLogic.Utils;
+
+namespace Ex03.GarageLogic
 {
     internal class FuelEngine
     {
@@ -54,5 +57,18 @@
             CurrentFuelAmount = newAmount;
         }
 
+        public override string ToString()
+        {
+            StringBuilder engineInfo = new StringBuilder();
+
+            engineInfo.AppendLine("-----\tENGINE\t-----");
+            engineInfo.AppendLine($"Engine Type:\tFuel");
+            engineInfo.AppendLine($"Fuel Type:\t{r_FuelType}");
+            engineInfo.AppendLine($"Current Fuel Amount:{CurrentFuelAmount}");
+            engineInfo.AppendLine($"Max Fuel Amount:{MaxFuelAmount}");
+            engineInfo.AppendLine();
+
+            return engineInfo.ToString();
+        }
     }
 }

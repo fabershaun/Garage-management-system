@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Ex03.GarageLogic
 {
-    internal class ElectricMotorcycle : Motorcycle
+    internal class ElectricMotorcycle : Motorcycle, IRechargeable
     {
         private const float k_BatteryMaxHours = 3.2F;
         internal ElectricEngine m_Engine;
@@ -14,8 +14,29 @@ namespace Ex03.GarageLogic
         internal ElectricMotorcycle(string i_LicenseNumber, string i_ModelName) : base(i_LicenseNumber, i_ModelName)
         {
             m_Engine = new ElectricEngine(k_BatteryMaxHours);
-            m_IsElectricType = true;
-            m_IsFuelType = false;
+        }
+
+        public override string GetEngineDescription()
+        {
+            return m_Engine.ToString();
+        }
+
+        public void Recharge(float i_HoursToCharge)
+        {
+            if (i_HoursToCharge < 0)
+            {
+                throw new ValueRangeException(i_HoursToCharge, 0, m_Engine.MaxBatteryHours);
+            }
+
+            float newBatteryAmount = m_Engine.CurrentHours + i_HoursToCharge;
+
+            if (newBatteryAmount > m_Engine.MaxBatteryHours)
+            {
+                throw new ValueRangeException(newBatteryAmount, 0, m_Engine.MaxBatteryHours);
+            }
+
+            SetEnergyAmountByAmount(newBatteryAmount);
+            SetEnergyPercentage(newBatteryAmount);
         }
 
         public override void SetEnergyPercentage(float i_EnergyAmount)

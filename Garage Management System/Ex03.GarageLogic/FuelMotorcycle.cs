@@ -7,7 +7,7 @@ using static Ex03.GarageLogic.FuelEngine;
 
 namespace Ex03.GarageLogic
 {
-    internal class FuelMotorcycle : Motorcycle
+    internal class FuelMotorcycle : Motorcycle, IFuelable
     {
         internal FuelEngine m_Engine;
         private const float k_MaxFuel = 5.8F;
@@ -41,11 +41,14 @@ namespace Ex03.GarageLogic
             SetEnergyPercentage(newFuelAmount);
         }
 
+        public override string GetEngineDescription()
+        {
+            return m_Engine.ToString();
+        }
+
         public override void SetEnergyPercentage(float i_EnergyAmount)
         {
             m_EnergyPercentage = i_EnergyAmount * 100.0f / k_MaxFuel;
-            m_IsFuelType = true;
-            m_IsElectricType = false;
         }
 
         public override void SetEnergyAmountByPercentage(float i_EnergyPercentage)

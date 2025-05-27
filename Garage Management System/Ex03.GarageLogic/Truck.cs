@@ -8,8 +8,10 @@ using static Ex03.GarageLogic.Utils;
 
 namespace Ex03.GarageLogic
 {
-    internal class Truck : Vehicle
+    internal class Truck : Vehicle, IFuelable
     {
+        private const int k_MaxAirPressureOfTruck = 27;
+        private const int k_NumOfTruckWheels = 12;
         private const float k_MaxFuel = 135F;
         private const Utils.eFuelType k_FuelType = Utils.eFuelType.Soler;
         internal FuelEngine m_Engine;
@@ -20,8 +22,15 @@ namespace Ex03.GarageLogic
         internal Truck(string i_LicenseNumber, string i_ModelName) : base(i_LicenseNumber, i_ModelName)
         {
             m_Engine = new FuelEngine(k_MaxFuel, k_FuelType);
-            m_IsFuelType = true;
-            m_IsElectricType = false;
+
+            List<Wheel> wheels = new List<Wheel>();
+
+            for (int i = 0; i < k_NumOfTruckWheels; i++)
+            {
+                wheels.Add(new Wheel(k_MaxAirPressureOfTruck));
+            }
+
+            Wheels = wheels;
         }
 
         public void Refuel(Utils.eFuelType i_FuelType, float i_Amount)
@@ -45,6 +54,11 @@ namespace Ex03.GarageLogic
 
             SetEnergyAmountByAmount(newFuelAmount);
             SetEnergyPercentage(newFuelAmount);
+        }
+
+        public override string GetEngineDescription()
+        {
+            return m_Engine.ToString();
         }
 
         internal bool CarriesHazardousMaterials
