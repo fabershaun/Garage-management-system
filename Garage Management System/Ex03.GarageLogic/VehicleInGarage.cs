@@ -16,6 +16,13 @@ namespace Ex03.GarageLogic
             Paid,
         }
 
+        public enum eGarageVehicleStatus
+        {
+            InRepair,
+            Repaired,
+            Paid,
+        }
+
         public VehicleInGarage(string i_OwnerName, string i_OwnerPhoneNumber, eGarageVehicleStatus i_Status, Vehicle i_Vehicle)
         {
             if (string.IsNullOrEmpty(i_OwnerName))
