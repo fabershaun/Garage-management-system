@@ -10,7 +10,7 @@ namespace Ex03.ConsoleUI
     {
         public static void Main()
         {
-            GarageUi garageUi = new GarageUi();
+            GarageUI garageUi = new GarageUI();
 
             garageUi.Run();
         }

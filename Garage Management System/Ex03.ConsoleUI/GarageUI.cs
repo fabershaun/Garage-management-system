@@ -6,7 +6,7 @@ using static Ex03.GarageLogic.VehicleInGarage;
 
 namespace Ex03.ConsoleUI
 {
-    internal class GarageUi
+    internal class GarageUI
     {
         private readonly GarageManager r_GarageManager = new GarageManager();
 

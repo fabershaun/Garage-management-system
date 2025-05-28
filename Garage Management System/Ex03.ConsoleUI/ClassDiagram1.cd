@@ -10,7 +10,7 @@
   <Class Name="Ex03.ConsoleUI.GarageUI">
     <Position X="4.5" Y="2.5" Width="3.5" />
     <TypeIdentifier>
-      <HashCode>EgCAAAAASBCQAECCACAAAgEAAAgACAAAADAAgQACAAI=</HashCode>
+      <HashCode>EgCAAAAgSJCQAECCAiACAgEAAAgAKAAAADCAgQCCAAI=</HashCode>
       <FileName>GarageUI.cs</FileName>
     </TypeIdentifier>
   </Class>
