@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Ex03.GarageLogic;
+using static Ex03.GarageLogic.Motorcycle;
 
 namespace Ex03.GarageLogic
 {
@@ -42,7 +43,7 @@ namespace Ex03.GarageLogic
 
         public enum eCarColor
         {
-            Yellow,
+            Yellow = 1,
             Black,
             White,
             Silver,
@@ -50,7 +51,7 @@ namespace Ex03.GarageLogic
 
         public enum eNumOfDoors
         {
-            Two,
+            Two = 1,
             Three,
             Four,
             Five,
@@ -61,11 +62,36 @@ namespace Ex03.GarageLogic
             m_Color = (eCarColor)Enum.Parse(typeof(eCarColor), i_AdditionalInfo1, false);
             m_NumOfDoors = (eNumOfDoors)Enum.Parse(typeof(eNumOfDoors), i_AdditionalInfo2, false);
         }
-
-        public override void AddAdditionalQuestions(List<string> io_QuestionsList) 
+        
+        public override List<(string Question, string[] options)> GetAddAdditionalQuestionsAndAnswerOptions()
         {
-            io_QuestionsList.Add("Car color (Yellow, Black, White, Silver)");
-            io_QuestionsList.Add("Number of doors in the car");
+            return new List<(string, string[])>
+                       {
+                           ("Enter car color: ", Enum.GetNames(typeof(eCarColor))),
+                           ("Enter number of doors in the car", Enum.GetNames(typeof(eNumOfDoors)))
+                       };
+        }
+
+        public override void ValidateAnswersAndSetValues(string[] i_Answers)
+        {
+            if (i_Answers.Length != 2)
+            {
+                throw new ArgumentException("Car expects exactly 2 additional answers.");
+            }
+
+            // License type
+            if (!Enum.TryParse(i_Answers[0], out eCarColor color))
+            {
+                throw new FormatException("Invalid car color.");
+            }
+            m_Color = color;
+
+            // Engine displacement
+            if (!Enum.TryParse(i_Answers[0], out eNumOfDoors numOfDoors))
+            {
+                throw new FormatException("Invalid number of doors.");
+            }
+            m_NumOfDoors = numOfDoors;
         }
     }
 }

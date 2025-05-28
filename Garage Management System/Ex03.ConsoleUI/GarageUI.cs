@@ -141,6 +141,7 @@ namespace Ex03.ConsoleUI
                             Console.Write("Enter owner's phone number: ");
                             string ownerPhone = Console.ReadLine();
 
+                            handleAdditionalQuestions(vehicle);
                             
                             VehicleInGarage vehicleInGarage = new VehicleInGarage(ownerName, ownerPhone, Utils.eGarageVehicleStatus.InRepair, vehicle);
                             r_GarageManager.m_VehiclesInGarage.Add(licensePlate, vehicleInGarage);
@@ -154,6 +155,38 @@ namespace Ex03.ConsoleUI
                     }
                 }
             }
+        }
+
+        private void handleAdditionalQuestions(Vehicle i_vehicle)
+        {
+            List<(string Question, string[] options)> questionsAndOptions = i_vehicle.GetAddAdditionalQuestionsAndAnswerOptions();
+            string[] answers = new string[questionsAndOptions.Count];
+            int index = 0;
+
+            foreach ((string question, string[] options) in questionsAndOptions)
+            {
+                Console.WriteLine(question);
+
+                if (options != null)
+                {
+                    for (int i = 0; i < options.Length; i++)
+                    {
+                        Console.WriteLine($"{i}. {options[i]}");
+                    }
+                }
+
+                answers[index] = Console.ReadLine();
+                index++;
+                try
+                {
+                    i_vehicle.ValidateAnswersAndSetValues(answers);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error setting additional info: {ex.Message}");
+                }
+            }
+
         }
 
         private static string chooseVehicleTypeToInsert()

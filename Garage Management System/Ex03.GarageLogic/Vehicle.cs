@@ -71,12 +71,15 @@ namespace Ex03.GarageLogic
 
         public abstract void SetAdditionalInfo(string i_AdditionalInfo1, string i_AdditionalInfo2);
 
-        public abstract void AddAdditionalQuestions(List<string> io_QuestionsList);
+        public abstract List<(string Question, string[] options)> GetAddAdditionalQuestionsAndAnswerOptions();
+
+        public abstract void ValidateAnswersAndSetValues(string[] i_Answers);
 
         public void AddEnergy(float i_AmountToAdd)
         {
             m_Engine.AddEnergy(i_AmountToAdd);
         }
+
     }
 }
 

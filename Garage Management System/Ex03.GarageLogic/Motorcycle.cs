@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Ex03.GarageLogic.Car;
 
 namespace Ex03.GarageLogic
 {
@@ -46,7 +47,7 @@ namespace Ex03.GarageLogic
 
         public enum eLicenseType
         {
-            A,
+            A = 1,
             A2,
             AB,
             B2,
@@ -58,10 +59,35 @@ namespace Ex03.GarageLogic
             m_EngineDisplacementCc = int.Parse(i_AdditionalInfo2);
         }
 
-        public override void AddAdditionalQuestions(List<string> io_QuestionsList)
+        public override List<(string Question, string[] options)> GetAddAdditionalQuestionsAndAnswerOptions()
         {
-            io_QuestionsList.Add("License type (A, A2, AB, B2)");
-            io_QuestionsList.Add("Engine displacement in cc");
+            return new List<(string, string[])>
+            {
+                ("Enter license type", Enum.GetNames(typeof(eLicenseType))),
+                ("Enter engine displacement in cc", null)
+            };
+        }
+
+        public override void ValidateAnswersAndSetValues(string[] i_Answers)
+        {
+            if (i_Answers.Length != 2)
+            {
+                throw new ArgumentException("Motorcycle expects exactly 2 additional answers.");
+            }
+
+            // License type
+            if (!Enum.TryParse(i_Answers[0], out eLicenseType license))
+            {
+                throw new FormatException("Invalid license type.");
+            }
+            m_LicenseType = license;
+
+            // Engine displacement
+            if (!int.TryParse(i_Answers[1], out int displacement))
+            {
+                throw new FormatException("Invalid engine displacement.");
+            }
+            m_EngineDisplacementCc = displacement;
         }
     }
 }

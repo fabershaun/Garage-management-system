@@ -47,7 +47,7 @@ namespace Ex03.GarageLogic
                     string additionalInfo1 = partsOfLine[8];
                     string additionalInfo2 = partsOfLine[9];
 
-                    Vehicle vehicle = VehicleCreator.CreateVehicle(partsOfLine[0], partsOfLine[1], partsOfLine[2]);
+                    Vehicle vehicle = VehicleCreator.CreateVehicle(vehicleType, licensePlate, modelName);
 
                     vehicle.Engine.EnergyPercentage = energyPercentage;
                     vehicle.Engine.CurrentEnergyAmount = vehicle.Engine.MaxEnergyAmount * (energyPercentage / 100);

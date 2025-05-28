@@ -22,13 +22,34 @@ namespace Ex03.GarageLogic
         public float EnergyPercentage
         {
             get { return m_EnergyPercentage; }
-            set { m_EnergyPercentage = value; }
+            set
+            {
+                if(value < 0 || value > 100)
+                {
+                    throw new ValueRangeException(0, 100, $"Energy percentage must be between 0 and 100: {value}");
+                }
+
+                m_EnergyPercentage = value;
+            }
         }
 
         public float CurrentEnergyAmount
         {
             get { return m_CurrentEnergyAmount; }
-            set { m_CurrentEnergyAmount = value; }
+            set
+            {
+                if(value < 0)
+                {
+                    throw new ValueRangeException(0, m_MaxEnergyAmount, $"Current energy amount cannot be negative: {value}");
+                }
+
+                if(value > m_MaxEnergyAmount)
+                {
+                    throw new ValueRangeException(0, m_MaxEnergyAmount, $"Current energy amount cannot exceed max energy amount: {m_MaxEnergyAmount}");
+                }
+
+                m_CurrentEnergyAmount = value;
+            }
         }
 
         public float MaxEnergyAmount

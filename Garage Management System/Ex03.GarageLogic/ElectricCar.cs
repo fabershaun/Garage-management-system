@@ -8,7 +8,7 @@ namespace Ex03.GarageLogic
     internal class ElectricCar : Car
     {
         private const float k_BatteryMaxHours = 4.8F;
-
+        
         internal ElectricCar(string i_LicenseNumber, string i_ModelName)
             : base(i_LicenseNumber, i_ModelName)
         {
