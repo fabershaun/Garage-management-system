@@ -11,6 +11,7 @@ namespace Ex03.GarageLogic
     {
         private const int k_MaxAirPressureOfMotorcycle = 30;
         private const int k_NumOfMotorcycleWheels = 2;
+        private const int k_NumOfAdditionalOptions = 2;
         private eLicenseType m_LicenseType;
         private int m_EngineDisplacementCc;
 
@@ -29,7 +30,14 @@ namespace Ex03.GarageLogic
         internal eLicenseType LicenseType
         {
             get { return m_LicenseType; }
-            set { m_LicenseType = value; }
+            set
+            {
+                if (!Enum.IsDefined(typeof(eLicenseType), value))
+                {
+                    throw new ArgumentException("Invalid license type", nameof(value));
+                }
+                m_LicenseType = value;
+            }
         }
         
         internal int EngineDisplacementCc
@@ -68,26 +76,34 @@ namespace Ex03.GarageLogic
             };
         }
 
-        public override void ValidateAnswersAndSetValues(string[] i_Answers)
+        public override void ValidateAnswersAndSetValues(string[] i_Answers, int i_Index)
         {
-            if (i_Answers.Length != 2)
+            if (i_Answers.Length != k_NumOfAdditionalOptions)
             {
-                throw new ArgumentException("Motorcycle expects exactly 2 additional answers.");
+                throw new ArgumentException($"Motorcycle expects exactly {k_NumOfAdditionalOptions} additional answers.");
             }
 
-            // License type
-            if (!Enum.TryParse(i_Answers[0], out eLicenseType license))
+            if(i_Index == 0)
             {
-                throw new FormatException("Invalid license type.");
-            }
-            m_LicenseType = license;
+                // License type
+                if (!Enum.TryParse(i_Answers[0], ignoreCase: true, out eLicenseType license))
+                {
+                    throw new FormatException("Invalid license type.");
+                }
 
-            // Engine displacement
-            if (!int.TryParse(i_Answers[1], out int displacement))
-            {
-                throw new FormatException("Invalid engine displacement.");
+                m_LicenseType = license;
             }
-            m_EngineDisplacementCc = displacement;
+            else if(i_Index == 1)
+            {
+                // Engine displacement
+                if (!int.TryParse(i_Answers[1], out int displacement))
+                {
+                    throw new FormatException("Invalid engine displacement.");
+                }
+
+                EngineDisplacementCc = displacement;
+            }
+
         }
     }
 }

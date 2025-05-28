@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Ex03.GarageLogic;
+using static Ex03.GarageLogic.VehicleInGarage;
 
 namespace Ex03.ConsoleUI
 {
@@ -109,7 +110,7 @@ namespace Ex03.ConsoleUI
             }
         }
 
-        private void insertNewVehicle()
+        /*private void insertNewVehicle()
         {
             if(checkVehicleNotExists(out string licensePlate))  // Check if vehicle already exists and if not exist so continue
             {
@@ -143,7 +144,7 @@ namespace Ex03.ConsoleUI
 
                             handleAdditionalQuestions(vehicle);
                             
-                            VehicleInGarage vehicleInGarage = new VehicleInGarage(ownerName, ownerPhone, Utils.eGarageVehicleStatus.InRepair, vehicle);
+                            VehicleInGarage vehicleInGarage = new VehicleInGarage(ownerName, ownerPhone, eGarageVehicleStatus.InRepair, vehicle);
                             r_GarageManager.m_VehiclesInGarage.Add(licensePlate, vehicleInGarage);
 
                             Console.WriteLine("Vehicle inserted successfully.");
@@ -155,6 +156,103 @@ namespace Ex03.ConsoleUI
                     }
                 }
             }
+        }*/
+
+        private void insertNewVehicle()
+        {
+            bool succeeded = false;
+
+            string licensePlate = null;
+            string selectedType = null;
+            string modelName = null;
+            float energyAmount = 0;
+            string ownerName = null;
+            string ownerPhone = null;
+            Vehicle vehicle = null;
+
+            try
+            {
+                if (checkVehicleNotExists(out licensePlate) && isLicensePlateValid(licensePlate))
+                {
+                    selectedType = getSelectedVehicleType();
+
+                    if (selectedType != null)
+                    {
+                        modelName = getModelName();
+                        energyAmount = getEnergyAmount();
+
+                        vehicle = createAndInitializeVehicle(selectedType, licensePlate, modelName, energyAmount);
+                        setWheels(vehicle.Wheels);
+
+                        ownerName = getOwnerName();
+                        ownerPhone = getOwnerPhone();
+
+                        handleAdditionalQuestions(vehicle);
+                        addVehicleToGarage(vehicle, ownerName, ownerPhone, licensePlate);
+
+                        succeeded = true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to insert vehicle: {ex.Message}");
+            }
+
+            if (succeeded)
+            {
+                Console.WriteLine("Vehicle inserted successfully.");
+            }
+        }
+
+        private string getSelectedVehicleType()
+        {
+            printVehicleTypes();
+
+            return chooseVehicleTypeToInsert();
+        }
+
+        private string getModelName()
+        {
+            Console.Write("Enter Model name: ");
+
+            return Console.ReadLine();
+        }
+
+        private float getEnergyAmount()
+        {
+            Console.Write("Energy Amount: ");
+            string input = Console.ReadLine();
+
+            return float.Parse(input); // Let exception bubble up
+        }
+
+        private string getOwnerName()
+        {
+            Console.Write("Enter owner's name: ");
+
+            return Console.ReadLine();
+        }
+
+        private string getOwnerPhone()
+        {
+            Console.Write("Enter owner's phone number: ");
+
+            return Console.ReadLine();
+        }
+
+        private Vehicle createAndInitializeVehicle(string type, string license, string model, float energy)
+        {
+            Vehicle vehicle = VehicleCreator.CreateVehicle(type, license, model);
+            vehicle.Engine.CurrentEnergyAmount = energy;
+            vehicle.Engine.EnergyPercentage = vehicle.Engine.ConvertAmountToPercentage(energy);
+            return vehicle;
+        }
+
+        private void addVehicleToGarage(Vehicle vehicle, string ownerName, string ownerPhone, string license)
+        {
+            VehicleInGarage vehicleInGarage = new VehicleInGarage(ownerName, ownerPhone, eGarageVehicleStatus.InRepair, vehicle);
+            r_GarageManager.m_VehiclesInGarage.Add(license, vehicleInGarage);
         }
 
         private void handleAdditionalQuestions(Vehicle i_vehicle)
@@ -176,15 +274,17 @@ namespace Ex03.ConsoleUI
                 }
 
                 answers[index] = Console.ReadLine();
-                index++;
+
                 try
                 {
-                    i_vehicle.ValidateAnswersAndSetValues(answers);
+                    i_vehicle.ValidateAnswersAndSetValues(answers, index);
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error setting additional info: {ex.Message}");
+                   throw new FormatException($"Error setting additional info: {ex.Message}");
                 }
+
+                index++;
             }
 
         }
@@ -219,32 +319,29 @@ namespace Ex03.ConsoleUI
 
         private void setWheels(List<Wheel> io_Wheels)
         {
-            string message;
             string choice = getUserChoiceForWheelUpdate();
 
             if (choice == null)
             {
                 throw new ArgumentNullException("choice", "User input cannot be null. Wheels were not updated.");
             }
-            else if(choice != "Y" && choice == "N")
+
+            if(choice != "Y" && choice != "N")
             {
-                throw new ArgumentException(
-                    "Invalid choice. Please enter 'Y' or 'N'. Wheels were not updated.",
-                    "choice");
-            }
-            else if(choice == "Y")
-            {
-                updateAllWheelsTogether(io_Wheels);
-                message = "All wheels were updated successfully.";
-            }
-            else if(choice == "N")
-            {
-                updateWheelsIndividually(io_Wheels);
-                message = "Wheels were updated individually.";
+                throw new ArgumentException("Invalid choice. Please enter 'Y' or 'N'. Wheels were not updated.");
             }
 
-
-            Console.WriteLine(message);
+            switch(choice)
+            {
+                case "Y":
+                    updateAllWheelsTogether(io_Wheels);
+                    Console.WriteLine("All wheels were updated successfully.");
+                    break;
+                case "N":
+                    updateWheelsIndividually(io_Wheels);
+                    Console.WriteLine("Wheels were updated individually.");
+                    break;
+            }
         }
 
         private string getUserChoiceForWheelUpdate()
@@ -311,10 +408,8 @@ namespace Ex03.ConsoleUI
                 {
                     break;
                 }
-                else
-                {
-                    Console.WriteLine("Invalid input. Please enter a numeric value.");
-                }
+
+                Console.WriteLine("Invalid input. Please enter a numeric value.");
             }
         }
 
@@ -390,18 +485,18 @@ namespace Ex03.ConsoleUI
             else
             {
                 Console.WriteLine("Select new status:");
-                foreach (Utils.eGarageVehicleStatus status in Enum.GetValues(typeof(Utils.eGarageVehicleStatus)))
+                foreach (eGarageVehicleStatus status in Enum.GetValues(typeof(eGarageVehicleStatus)))
                 {
                     Console.WriteLine($"{(int)status}. {status}");
                 }
 
-                if (!int.TryParse(Console.ReadLine(), out int statusIndex) || !Enum.IsDefined(typeof(Utils.eGarageVehicleStatus), statusIndex))
+                if (!int.TryParse(Console.ReadLine(), out int statusIndex) || !Enum.IsDefined(typeof(eGarageVehicleStatus), statusIndex))
                 {
                     message = "Invalid status selection.";
                 }
                 else
                 {
-                    r_GarageManager.m_VehiclesInGarage[licensePlate].Status = (Utils.eGarageVehicleStatus)statusIndex;
+                    r_GarageManager.m_VehiclesInGarage[licensePlate].Status = (eGarageVehicleStatus)statusIndex;
                     message = "Vehicle status updated successfully.";
                 }
             }

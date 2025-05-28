@@ -9,12 +9,6 @@ namespace Ex03.GarageLogic
         private string m_OwnerPhoneNumber;
         private eGarageVehicleStatus m_Status;
         private Vehicle m_Vehicle;
-        public enum eGarageVehicleStatus
-        {
-            InRepair,
-            Repaired,
-            Paid,
-        }
 
         public enum eGarageVehicleStatus
         {

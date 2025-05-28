@@ -70,7 +70,7 @@ namespace Ex03.GarageLogic
 
         public abstract List<(string Question, string[] options)> GetAddAdditionalQuestionsAndAnswerOptions();
 
-        public abstract void ValidateAnswersAndSetValues(string[] i_Answers);
+        public abstract void ValidateAnswersAndSetValues(string[] i_Answers, int index);
 
         public void AddEnergy(float i_AmountToAdd)
         {

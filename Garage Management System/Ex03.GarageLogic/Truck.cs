@@ -10,6 +10,7 @@ namespace Ex03.GarageLogic
     {
         private const int k_MaxAirPressureOfTruck = 27;
         private const int k_NumOfTruckWheels = 12;
+        private const int k_NumOfAdditionalOptions = 2;
         private const float k_MaxFuel = 135F;
         private const eFuelType k_FuelType = eFuelType.Soler;
         private bool m_CarriesHazardousMaterials;
@@ -71,27 +72,32 @@ namespace Ex03.GarageLogic
                        };
         }
 
-        public override void ValidateAnswersAndSetValues(string[] i_Answers)
+        public override void ValidateAnswersAndSetValues(string[] i_Answers, int i_Index)
         {
-            if (i_Answers.Length != 2)
+            if (i_Answers.Length != k_NumOfAdditionalOptions)
             {
-                throw new ArgumentException("Truck expects exactly 2 additional answers.");
+                throw new ArgumentException($"Truck expects exactly {k_NumOfAdditionalOptions} additional answers.");
             }
 
-            // Hazardous materials
-            if (i_Answers[0] != "1" && i_Answers[0] != "2")
+            if(i_Index == 0)
             {
-                throw new FormatException("Invalid hazardous materials answer.");
+                // Hazardous materials
+                if (i_Answers[0] != "1" && i_Answers[0] != "2")
+                {
+                    throw new FormatException("Invalid hazardous materials answer.");
+                }
+
+                m_CarriesHazardousMaterials = i_Answers[0] == "1";
             }
-
-            m_CarriesHazardousMaterials = i_Answers[0] == "1";
-
-            // Cargo volume
-            if (!float.TryParse(i_Answers[1], out float cargoVolume))
+            else if(i_Index == 1)
             {
-                throw new FormatException("Invalid cargo volume.");
+                // Cargo volume
+                if (!float.TryParse(i_Answers[i_Index], out float cargoVolume))
+                {
+                    throw new FormatException("Invalid cargo volume.");
+                }
+                m_CargoVolume = cargoVolume;
             }
-            m_CargoVolume = cargoVolume;
         }
     }
 }
