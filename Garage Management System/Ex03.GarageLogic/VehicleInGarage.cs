@@ -5,10 +5,10 @@ namespace Ex03.GarageLogic
 {
     public class VehicleInGarage
     {
-        private string m_OwnerName;
-        private string m_OwnerPhoneNumber;
-        private eGarageVehicleStatus m_Status;
+        private readonly string r_OwnerName;
+        private readonly string r_OwnerPhoneNumber;
         private Vehicle m_Vehicle;
+        public eGarageVehicleStatus Status { get; set; }
 
         public enum eGarageVehicleStatus
         {
@@ -28,26 +28,20 @@ namespace Ex03.GarageLogic
                 throw new ArgumentNullException("i_OwnerPhoneNumber", "Owner phone number cannot be null or empty");
             }
 
-            m_OwnerName = i_OwnerName;
-            m_OwnerPhoneNumber = i_OwnerPhoneNumber;
-            m_Status = i_Status;
+            r_OwnerName = i_OwnerName;
+            r_OwnerPhoneNumber = i_OwnerPhoneNumber;
+            Status = i_Status;
             m_Vehicle = i_Vehicle ?? throw new ArgumentNullException("i_Vehicle", "Vehicle cannot be null");
         }
 
         internal string OwnerName
         {
-            get { return m_OwnerName; }
+            get { return r_OwnerName; }
         }
 
         internal string OwnerPhoneNumber
         {
-            get { return m_OwnerPhoneNumber; }
-        }
-
-        public eGarageVehicleStatus Status
-        {
-            get { return m_Status; }
-            set { m_Status = value; }
+            get { return r_OwnerPhoneNumber; }
         }
 
         public Vehicle Vehicle

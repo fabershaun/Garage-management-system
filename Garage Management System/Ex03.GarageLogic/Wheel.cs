@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Ex03.GarageLogic
 {
@@ -10,7 +6,7 @@ namespace Ex03.GarageLogic
     {
         private string m_ManufacturerName;
         private float m_CurrentAirPressure = 0;
-        private readonly float r_MaxAirPressure;
+        internal float MaxAirPressure { get; }
 
         public Wheel(float i_MaxAirPressure)
         {
@@ -19,21 +15,22 @@ namespace Ex03.GarageLogic
                 throw new ArgumentException("Maximum air pressure must be positive", "i_MaxAirPressure");
             }
 
-            r_MaxAirPressure = i_MaxAirPressure;
+            MaxAirPressure = i_MaxAirPressure;
         }
+
 
         public void Inflate(float i_AirPressureToAdd)
         {
             if (i_AirPressureToAdd < 0)
             {
-                throw new ValueRangeException(i_AirPressureToAdd, 0, r_MaxAirPressure);
+                throw new ValueRangeException(i_AirPressureToAdd, 0, MaxAirPressure);
             }
 
             float newAirPressure = m_CurrentAirPressure + i_AirPressureToAdd;
 
-            if (newAirPressure > r_MaxAirPressure)
+            if (newAirPressure > MaxAirPressure)
             {
-                throw new ValueRangeException(newAirPressure, 0, r_MaxAirPressure);
+                throw new ValueRangeException(newAirPressure, 0, MaxAirPressure);
             }
 
             m_CurrentAirPressure = newAirPressure;
@@ -41,7 +38,7 @@ namespace Ex03.GarageLogic
 
         public void InflateToMax()
         {
-            m_CurrentAirPressure = r_MaxAirPressure;
+            m_CurrentAirPressure = MaxAirPressure;
         }
         
         public string Manufacturer
@@ -49,7 +46,6 @@ namespace Ex03.GarageLogic
             get
             {
                 return m_ManufacturerName;
-
             }
             set
             {
@@ -70,22 +66,14 @@ namespace Ex03.GarageLogic
             }
             set
             {
-                if(value < 0 || value > r_MaxAirPressure)
+                if(value < 0 || value > MaxAirPressure)
                 {
                     throw new ArgumentOutOfRangeException(
                         nameof(value),
-                        $"Current air pressure must be between 0 and {r_MaxAirPressure}");
+                        $"Current air pressure must be between 0 and {MaxAirPressure}");
                 }
 
                 m_CurrentAirPressure = value;
-            }
-        }
-
-        internal float MaxAirPressure
-        {
-            get
-            {
-                return r_MaxAirPressure;
             }
         }
     }

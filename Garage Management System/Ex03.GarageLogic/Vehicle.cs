@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 namespace Ex03.GarageLogic
@@ -18,10 +17,12 @@ namespace Ex03.GarageLogic
             {
                 throw new ArgumentNullException("i_ModelName", "Model cannot be null or empty");
             }
+
             if (string.IsNullOrEmpty(i_LicenseNumber))
             {
                 throw new ArgumentNullException("i_LicenseNumber", "License plate cannot be null or empty");
             }
+
             r_ModelName = i_ModelName;
             r_LicenseNumber = i_LicenseNumber;
         }
@@ -81,13 +82,12 @@ namespace Ex03.GarageLogic
 
         public abstract List<(string Question, string[] options)> GetAddAdditionalQuestionsAndAnswerOptions();
 
-        public abstract void ValidateAnswersAndSetValues(string[] i_Answers, int index);
+        public abstract void ValidateAnswersAndSetValues(string[] i_Answers, int i_Index);
 
         public void AddEnergy(float i_AmountToAdd)
         {
             m_Engine.AddEnergy(i_AmountToAdd);
         }
-
     }
 }
 

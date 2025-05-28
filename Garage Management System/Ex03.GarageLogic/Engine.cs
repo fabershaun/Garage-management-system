@@ -87,9 +87,9 @@ namespace Ex03.GarageLogic
             m_EnergyPercentage = (m_CurrentEnergyAmount / m_MaxEnergyAmount) * 100.0f;
         }
 
-        public float ConvertAmountToPercentage(float i_amount)
+        public float ConvertAmountToPercentage(float i_Amount)
         {
-            return (i_amount / m_MaxEnergyAmount) * 100.0f;
+            return (i_Amount / m_MaxEnergyAmount) * 100.0f;
         }
 
         public float ConvertPercentageToAmount(float i_Percentage)

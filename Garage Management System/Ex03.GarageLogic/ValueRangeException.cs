@@ -15,19 +15,11 @@ namespace Ex03.GarageLogic
             MaxValue = i_MaxValue;
         }
 
-
         public ValueRangeException(float i_MinValue, float i_MaxValue, string i_Message)
             : base(i_Message)
         {
             MinValue = i_MinValue;
             MaxValue = i_MaxValue;
         }
-
-/*        public ValueRangeException(float i_MinValue, float i_MaxValue, string i_Message, Exception i_InnerException)
-            : base(i_Message, i_InnerException)
-        {
-            MinValue = i_MinValue;
-            MaxValue = i_MaxValue;
-        }*/
     }
 }

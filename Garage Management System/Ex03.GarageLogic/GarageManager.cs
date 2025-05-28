@@ -70,7 +70,6 @@ namespace Ex03.GarageLogic
                     }
                     
                     vehicle.SetAdditionalInfo(additionalInfo1, additionalInfo2);
-
                     m_VehiclesInGarage.Add(licensePlate, vehicleInGarage);      // Add the vehicle to the garage
                 }
                 catch(Exception ex)

@@ -41,7 +41,7 @@ namespace Ex03.GarageLogic
             {
                 if (!Enum.IsDefined(typeof(eLicenseType), value))
                 {
-                    throw new ArgumentException("Invalid license type", nameof(value));
+                    throw new ArgumentException("Invalid license type");
                 }
                 m_LicenseType = value;
             }
@@ -54,7 +54,7 @@ namespace Ex03.GarageLogic
             {
                 if (value <= 0)
                 {
-                    throw new ArgumentException("Engine displacement must be a positive value", "value");
+                    throw new ArgumentException("Engine displacement must be a positive value");
                 }
                 m_EngineDisplacementCc = value;
             }

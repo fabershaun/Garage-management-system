@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using static Ex03.GarageLogic.Car;
 using static Ex03.GarageLogic.FuelEngine;
-using static Ex03.GarageLogic.Motorcycle;
 
 namespace Ex03.GarageLogic
 {
@@ -14,9 +13,8 @@ namespace Ex03.GarageLogic
         private const int k_NumOfAdditionalOptions = 2;
         private const float k_MaxFuel = 135F;
         private const eFuelType k_FuelType = eFuelType.Soler;
-        private bool m_CarriesHazardousMaterials;
         private float m_CargoVolume;
-        
+
         internal Truck(string i_LicenseNumber, string i_ModelName) : base(i_LicenseNumber, i_ModelName)
         {
             m_Engine = new FuelEngine(k_MaxFuel, k_FuelType);
@@ -37,16 +35,12 @@ namespace Ex03.GarageLogic
             No,
         }
 
-        internal bool CarriesHazardousMaterials
-        {
-            get { return m_CarriesHazardousMaterials; }
-            set { m_CarriesHazardousMaterials = value; }
-        }
+        internal bool CarriesHazardousMaterials { get; set; }
 
         internal float CargoVolume
         {
             get { return m_CargoVolume; }
-            
+
             set
             {
                 if (value < 0)
@@ -60,7 +54,7 @@ namespace Ex03.GarageLogic
 
         public override void SetAdditionalInfo(string i_AdditionalInfo1, string i_AdditionalInfo2)
         {
-            m_CarriesHazardousMaterials = bool.Parse(i_AdditionalInfo1);
+            CarriesHazardousMaterials = bool.Parse(i_AdditionalInfo1);
             m_CargoVolume = float.Parse(i_AdditionalInfo2);
         }
 
@@ -80,7 +74,7 @@ namespace Ex03.GarageLogic
                 throw new ArgumentException($"Truck expects exactly {k_NumOfAdditionalOptions} additional answers.");
             }
 
-            if(i_Index == 0)
+            if (i_Index == 0)
             {
                 // Hazardous materials
                 if (i_Answers[0] != "1" && i_Answers[0] != "2")
@@ -90,7 +84,7 @@ namespace Ex03.GarageLogic
 
                 CarriesHazardousMaterials = i_Answers[0] == "1";
             }
-            else if(i_Index == 1)
+            else if (i_Index == 1)
             {
                 // Cargo volume
                 if (!float.TryParse(i_Answers[i_Index], out float cargoVolume))

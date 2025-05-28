@@ -6,7 +6,7 @@ using static Ex03.GarageLogic.VehicleInGarage;
 
 namespace Ex03.ConsoleUI
 {
-    internal class GarageUI
+    internal class GarageUi
     {
         private readonly GarageManager r_GarageManager = new GarageManager();
 
@@ -14,13 +14,13 @@ namespace Ex03.ConsoleUI
         {
             bool exitRequested = false;
 
-            while(!exitRequested)
+            while (!exitRequested)
             {
                 printMainMenu();
                 string userChoice = Console.ReadLine();
                 Console.Clear();
 
-                switch(userChoice)
+                switch (userChoice)
                 {
                     case "1":
                         loadVehiclesFromFile();
@@ -54,7 +54,7 @@ namespace Ex03.ConsoleUI
                         break;
                 }
 
-                if(exitRequested)
+                if (exitRequested)
                 {
                     continue;
                 }
@@ -158,14 +158,14 @@ namespace Ex03.ConsoleUI
             }
         }
 
-        private string getSelectedVehicleType()
+        private static string getSelectedVehicleType()
         {
             printVehicleTypes();
 
             return chooseVehicleTypeToInsert();
         }
 
-        private string getModelName()
+        private static string getModelName()
         {
             Console.Write("Enter Model name: ");
 
@@ -194,23 +194,23 @@ namespace Ex03.ConsoleUI
             return Console.ReadLine();
         }
 
-        private Vehicle createAndInitializeVehicle(string type, string license, string model, float energy)
+        private Vehicle createAndInitializeVehicle(string i_Type, string i_License, string i_Model, float i_Energy)
         {
-            Vehicle vehicle = VehicleCreator.CreateVehicle(type, license, model);
-            vehicle.Engine.CurrentEnergyAmount = energy;
-            vehicle.Engine.EnergyPercentage = vehicle.Engine.ConvertAmountToPercentage(energy);
+            Vehicle vehicle = VehicleCreator.CreateVehicle(i_Type, i_License, i_Model);
+            vehicle.Engine.CurrentEnergyAmount = i_Energy;
+            vehicle.Engine.EnergyPercentage = vehicle.Engine.ConvertAmountToPercentage(i_Energy);
             return vehicle;
         }
 
-        private void addVehicleToGarage(Vehicle vehicle, string ownerName, string ownerPhone, string license)
+        private void addVehicleToGarage(Vehicle i_Vehicle, string i_OwnerName, string i_OwnerPhone, string i_License)
         {
-            VehicleInGarage vehicleInGarage = new VehicleInGarage(ownerName, ownerPhone, eGarageVehicleStatus.InRepair, vehicle);
-            r_GarageManager.m_VehiclesInGarage.Add(license, vehicleInGarage);
+            VehicleInGarage vehicleInGarage = new VehicleInGarage(i_OwnerName, i_OwnerPhone, eGarageVehicleStatus.InRepair, i_Vehicle);
+            r_GarageManager.m_VehiclesInGarage.Add(i_License, vehicleInGarage);
         }
 
-        private void handleAdditionalQuestions(Vehicle i_vehicle)
+        private void handleAdditionalQuestions(Vehicle i_Vehicle)
         {
-            List<(string Question, string[] options)> questionsAndOptions = i_vehicle.GetAddAdditionalQuestionsAndAnswerOptions();
+            List<(string Question, string[] options)> questionsAndOptions = i_Vehicle.GetAddAdditionalQuestionsAndAnswerOptions();
             string[] answers = new string[questionsAndOptions.Count];
             int index = 0;
 
@@ -230,16 +230,15 @@ namespace Ex03.ConsoleUI
 
                 try
                 {
-                    i_vehicle.ValidateAnswersAndSetValues(answers, index);
+                    i_Vehicle.ValidateAnswersAndSetValues(answers, index);
                 }
                 catch (Exception ex)
                 {
-                   throw new FormatException($"Error setting additional info: {ex.Message}");
+                    throw new FormatException($"Error setting additional info: {ex.Message}");
                 }
 
                 index++;
             }
-
         }
 
         private static string chooseVehicleTypeToInsert()
@@ -270,7 +269,7 @@ namespace Ex03.ConsoleUI
             }
         }
 
-        private void setWheels(List<Wheel> io_Wheels)
+        private void setWheels(List<Wheel> i_IoWheels)
         {
             string choice = getUserChoiceForWheelUpdate();
 
@@ -279,19 +278,19 @@ namespace Ex03.ConsoleUI
                 throw new ArgumentNullException("choice", "User input cannot be null. Wheels were not updated.");
             }
 
-            if(choice != "Y" && choice != "N")
+            if (choice != "Y" && choice != "N")
             {
                 throw new ArgumentException("Invalid choice. Please enter 'Y' or 'N'. Wheels were not updated.");
             }
 
-            switch(choice)
+            switch (choice)
             {
                 case "Y":
-                    updateAllWheelsTogether(io_Wheels);
+                    updateAllWheelsTogether(i_IoWheels);
                     Console.WriteLine("All wheels were updated successfully.");
                     break;
                 case "N":
-                    updateWheelsIndividually(io_Wheels);
+                    updateWheelsIndividually(i_IoWheels);
                     Console.WriteLine("Wheels were updated individually successfully.");
                     break;
             }
@@ -299,69 +298,54 @@ namespace Ex03.ConsoleUI
             Console.WriteLine();
         }
 
-        private string getUserChoiceForWheelUpdate()
+        private static string getUserChoiceForWheelUpdate()
         {
-            string result;
-
             Console.Write("Would you like to set all the wheels at once? (Y/N): ");
             string input = Console.ReadLine();
 
-            if (input == null)
-            {
-                result = null;
-            }
-            else
-            {
-                result = input.Trim().ToUpper();
-            }
+            string result = input == null ? null : input.Trim().ToUpper();
 
             return result;
         }
 
-        private void updateAllWheelsTogether(List<Wheel> io_Wheels)
+        private void updateAllWheelsTogether(List<Wheel> i_IoWheels)
         {
-            string manufacturer;
-            float pressure;
+            getManufacturerAndCurrentAirPressureFromUser(out string manufacturer, out float pressure);
 
-            getManufacturerAndCurrentAirPressureFromUser(out manufacturer, out pressure);
-
-            foreach (Wheel wheel in io_Wheels)
+            foreach (Wheel wheel in i_IoWheels)
             {
                 wheel.Manufacturer = manufacturer;
                 wheel.CurrentAirPressure = pressure;
             }
         }
 
-        private void updateWheelsIndividually(List<Wheel> io_Wheels)
+        private void updateWheelsIndividually(List<Wheel> i_IoWheels)
         {
-            for (int i = 0; i < io_Wheels.Count; i++)
+            for (int i = 0; i < i_IoWheels.Count; i++)
             {
                 Console.WriteLine();
                 Console.WriteLine($"=== Wheel #{i + 1} ===");
 
-                string manufacturer;
-                float pressure;
+                getManufacturerAndCurrentAirPressureFromUser(out string manufacturer, out float pressure);
 
-                getManufacturerAndCurrentAirPressureFromUser(out manufacturer, out pressure);
-
-                io_Wheels[i].Manufacturer = manufacturer;
-                io_Wheels[i].CurrentAirPressure = pressure;
+                i_IoWheels[i].Manufacturer = manufacturer;
+                i_IoWheels[i].CurrentAirPressure = pressure;
             }
 
             Console.WriteLine();
         }
 
-        private void getManufacturerAndCurrentAirPressureFromUser(out string o_Manufacturer, out float o_CurrentAirPressure)
+        private static void getManufacturerAndCurrentAirPressureFromUser(out string i_OManufacturer, out float i_OCurrentAirPressure)
         {
             Console.Write("Enter wheel manufacturer name: ");
-            o_Manufacturer = Console.ReadLine();
+            i_OManufacturer = Console.ReadLine();
 
             while (true)
             {
                 Console.Write("Enter current air pressure: ");
                 string input = Console.ReadLine();
 
-                if (float.TryParse(input, out o_CurrentAirPressure))
+                if (float.TryParse(input, out i_OCurrentAirPressure))
                 {
                     break;
                 }
@@ -410,17 +394,17 @@ namespace Ex03.ConsoleUI
                 }
             }
 
-            if(!isValid)
+            if (!isValid)
             {
                 Console.WriteLine("Invalid license plate format");
             }
-            
+
             return isValid;
         }
 
         private void showLicenseNumbers()
         {
-            if(r_GarageManager.m_VehiclesInGarage.Count == 0)
+            if (r_GarageManager.m_VehiclesInGarage.Count == 0)
             {
                 Console.WriteLine("Garage is empty.");
                 return;
@@ -437,7 +421,7 @@ namespace Ex03.ConsoleUI
         private void changeVehicleStatus()
         {
             string message;
-  
+
             if (checkVehicleExists(out VehicleInGarage vehicleInGarage))
             {
                 string licensePlate = vehicleInGarage.Vehicle.LicenseNumber;
@@ -462,9 +446,9 @@ namespace Ex03.ConsoleUI
 
         private void inflateWheelsToMax()
         {
-            if(checkVehicleExists(out VehicleInGarage vehicleInGarage))
+            if (checkVehicleExists(out VehicleInGarage vehicleInGarage))
             {
-                foreach(Wheel wheel in vehicleInGarage.Vehicle.Wheels)
+                foreach (Wheel wheel in vehicleInGarage.Vehicle.Wheels)
                 {
                     wheel.InflateToMax();
                 }
@@ -475,10 +459,9 @@ namespace Ex03.ConsoleUI
 
         private void refuelVehicle()
         {
-            string message;
-
-            if(checkVehicleExists(out VehicleInGarage vehicleInGarage))
+            if (checkVehicleExists(out VehicleInGarage vehicleInGarage))
             {
+                string message;
                 Vehicle vehicle = vehicleInGarage.Vehicle;
 
                 if (vehicle.Engine.EngineType != Engine.eEngineType.Fuel)
@@ -533,10 +516,9 @@ namespace Ex03.ConsoleUI
 
         private void chargeVehicle()
         {
-            string message;
-
-            if(checkVehicleExists(out VehicleInGarage vehicleInGarage))
+            if (checkVehicleExists(out VehicleInGarage vehicleInGarage))
             {
+                string message;
                 Vehicle vehicle = vehicleInGarage.Vehicle;
 
                 // Check if the vehicle is rechargeable
@@ -565,19 +547,19 @@ namespace Ex03.ConsoleUI
                         }
                     }
                 }
-                
+
                 Console.WriteLine(message);
             }
         }
 
-        private bool checkVehicleExists(out VehicleInGarage o_vehicleInGarage)
+        private bool checkVehicleExists(out VehicleInGarage i_OVehicleInGarage)
         {
             bool exist = true;
 
             Console.Write("Enter license plate (XX-XXX-XX) or (XXX-XX-XXX): ");
             string licensePlate = Console.ReadLine();
 
-            if (!r_GarageManager.m_VehiclesInGarage.TryGetValue(licensePlate, out o_vehicleInGarage))
+            if (!r_GarageManager.m_VehiclesInGarage.TryGetValue(licensePlate, out i_OVehicleInGarage))
             {
                 Console.WriteLine("No such vehicle found in the garage.");
                 exist = false;
@@ -586,14 +568,14 @@ namespace Ex03.ConsoleUI
             return exist;
         }
 
-        private bool checkVehicleNotExists(out string o_licensePlate)
+        private bool checkVehicleNotExists(out string i_OLicensePlate)
         {
             bool exist = true;
 
             Console.Write("Enter license plate (XX-XXX-XX) or (XXX-XX-XXX): ");
-            o_licensePlate = Console.ReadLine();
+            i_OLicensePlate = Console.ReadLine();
 
-            if (r_GarageManager.m_VehiclesInGarage.ContainsKey(o_licensePlate))
+            if (r_GarageManager.m_VehiclesInGarage.ContainsKey(i_OLicensePlate))
             {
                 Console.WriteLine("Vehicle already exist in the garage.");
                 exist = false;
@@ -604,7 +586,7 @@ namespace Ex03.ConsoleUI
 
         private void showVehicleDetails()
         {
-            if(!checkVehicleExists(out VehicleInGarage vehicleInGarage))
+            if (!checkVehicleExists(out VehicleInGarage vehicleInGarage))
             {
                 return;
             }
