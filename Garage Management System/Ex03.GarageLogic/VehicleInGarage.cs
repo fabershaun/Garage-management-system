@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Text;
-using static Ex03.GarageLogic.Utils;
 
 namespace Ex03.GarageLogic
 {
@@ -10,6 +9,12 @@ namespace Ex03.GarageLogic
         private string m_OwnerPhoneNumber;
         private eGarageVehicleStatus m_Status;
         private Vehicle m_Vehicle;
+        public enum eGarageVehicleStatus
+        {
+            InRepair,
+            Repaired,
+            Paid,
+        }
 
         public VehicleInGarage(string i_OwnerName, string i_OwnerPhoneNumber, eGarageVehicleStatus i_Status, Vehicle i_Vehicle)
         {

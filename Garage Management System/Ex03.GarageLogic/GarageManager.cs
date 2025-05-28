@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using static Ex03.GarageLogic.Utils;
+using static Ex03.GarageLogic.VehicleInGarage;
 
 namespace Ex03.GarageLogic
 {

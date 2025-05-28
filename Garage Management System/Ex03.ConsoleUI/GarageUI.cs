@@ -171,7 +171,7 @@ namespace Ex03.ConsoleUI
                 {
                     for (int i = 0; i < options.Length; i++)
                     {
-                        Console.WriteLine($"{i}. {options[i]}");
+                        Console.WriteLine($"{i + 1}. {options[i]}");
                     }
                 }
 
@@ -224,22 +224,25 @@ namespace Ex03.ConsoleUI
 
             if (choice == null)
             {
-                message = "No input received. Wheels were not updated.";
+                throw new ArgumentNullException("choice", "User input cannot be null. Wheels were not updated.");
             }
-            else if (choice == "Y")
+            else if(choice != "Y" && choice == "N")
+            {
+                throw new ArgumentException(
+                    "Invalid choice. Please enter 'Y' or 'N'. Wheels were not updated.",
+                    "choice");
+            }
+            else if(choice == "Y")
             {
                 updateAllWheelsTogether(io_Wheels);
                 message = "All wheels were updated successfully.";
             }
-            else if (choice == "N")
+            else if(choice == "N")
             {
                 updateWheelsIndividually(io_Wheels);
                 message = "Wheels were updated individually.";
             }
-            else
-            {
-                message = "Invalid choice. Please enter 'Y' or 'N'. Wheels were not updated.";
-            }
+
 
             Console.WriteLine(message);
         }

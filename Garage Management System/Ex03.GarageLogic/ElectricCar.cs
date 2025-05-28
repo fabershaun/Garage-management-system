@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using static Ex03.GarageLogic.ElectricEngine;
-using static Ex03.GarageLogic.Utils;
 
 namespace Ex03.GarageLogic
 {

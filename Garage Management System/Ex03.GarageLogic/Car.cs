@@ -87,7 +87,7 @@ namespace Ex03.GarageLogic
             m_Color = color;
 
             // Engine displacement
-            if (!Enum.TryParse(i_Answers[0], out eNumOfDoors numOfDoors))
+            if (!Enum.TryParse(i_Answers[1], out eNumOfDoors numOfDoors))
             {
                 throw new FormatException("Invalid number of doors.");
             }
