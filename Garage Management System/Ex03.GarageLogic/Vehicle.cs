@@ -45,7 +45,15 @@ namespace Ex03.GarageLogic
                 m_Wheels = value ?? throw new ArgumentNullException("value");
             }
         }
-        
+
+        public string LicenseNumber
+        {
+            get
+            {
+                return r_LicenseNumber;
+            }
+        }
+
         public override string ToString()
         {
             StringBuilder vehicleInfo = new StringBuilder();
@@ -62,9 +70,12 @@ namespace Ex03.GarageLogic
             vehicleInfo.AppendLine();
 
             vehicleInfo.AppendLine(m_Engine.ToString());
+            vehicleInfo.AppendLine(GetAdditionalInfo());
 
             return vehicleInfo.ToString();
         }
+
+        public abstract string GetAdditionalInfo();
 
         public abstract void SetAdditionalInfo(string i_AdditionalInfo1, string i_AdditionalInfo2);
 

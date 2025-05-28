@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Ex03.GarageLogic;
+using static Ex03.GarageLogic.FuelEngine;
 using static Ex03.GarageLogic.Motorcycle;
 
 namespace Ex03.GarageLogic
@@ -27,6 +28,22 @@ namespace Ex03.GarageLogic
             }
 
             Wheels = wheels;
+        }
+
+        public enum eCarColor
+        {
+            Yellow = 1,
+            Black,
+            White,
+            Silver,
+        }
+
+        public enum eNumOfDoors
+        {
+            Two = 1,
+            Three,
+            Four,
+            Five,
         }
 
         internal eCarColor CarColor
@@ -53,22 +70,6 @@ namespace Ex03.GarageLogic
                 }
                 m_NumOfDoors = value;
             }
-        }
-
-        public enum eCarColor
-        {
-            Yellow = 1,
-            Black,
-            White,
-            Silver,
-        }
-
-        public enum eNumOfDoors
-        {
-            Two = 1,
-            Three,
-            Four,
-            Five,
         }
 
         public override void SetAdditionalInfo(string i_AdditionalInfo1, string i_AdditionalInfo2)
@@ -113,7 +114,18 @@ namespace Ex03.GarageLogic
 
                 NumOfDoors = numOfDoors;
             }
+        }
 
+        public override string GetAdditionalInfo()
+        {
+            StringBuilder engineInfo = new StringBuilder();
+
+            engineInfo.AppendLine("-----\tADDITIONAL INFO\t-----");
+            engineInfo.AppendLine($"Car Color: {CarColor}");
+            engineInfo.AppendLine($"Number Of Doors: {NumOfDoors}");
+            engineInfo.AppendLine();
+
+            return engineInfo.ToString();
         }
     }
 }

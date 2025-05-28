@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using static Ex03.GarageLogic.Car;
 using static Ex03.GarageLogic.FuelEngine;
 using static Ex03.GarageLogic.Motorcycle;
@@ -53,7 +54,7 @@ namespace Ex03.GarageLogic
                     throw new ValueRangeException(value, 0, float.MaxValue);
                 }
 
-                m_CargoVolume = value;
+                CargoVolume = value;
             }
         }
 
@@ -87,7 +88,7 @@ namespace Ex03.GarageLogic
                     throw new FormatException("Invalid hazardous materials answer.");
                 }
 
-                m_CarriesHazardousMaterials = i_Answers[0] == "1";
+                CarriesHazardousMaterials = i_Answers[0] == "1";
             }
             else if(i_Index == 1)
             {
@@ -96,8 +97,21 @@ namespace Ex03.GarageLogic
                 {
                     throw new FormatException("Invalid cargo volume.");
                 }
-                m_CargoVolume = cargoVolume;
+
+                CargoVolume = cargoVolume;
             }
+        }
+
+        public override string GetAdditionalInfo()
+        {
+            StringBuilder engineInfo = new StringBuilder();
+
+            engineInfo.AppendLine("-----\tADDITIONAL INFO\t-----");
+            engineInfo.AppendLine($"Carries Hazardous Materials: {CarriesHazardousMaterials}");
+            engineInfo.AppendLine($"Cargo Volume: {CargoVolume}");
+            engineInfo.AppendLine();
+
+            return engineInfo.ToString();
         }
     }
 }

@@ -21,7 +21,6 @@ namespace Ex03.GarageLogic
             engineInfo.AppendLine($"Engine type:\tElectric");
             engineInfo.AppendLine($"Current hours left :\t{m_CurrentEnergyAmount:F1}");
             engineInfo.AppendLine($"Max energy amount:\t{m_MaxEnergyAmount}");
-            engineInfo.AppendLine();
 
             return engineInfo.ToString();
         }

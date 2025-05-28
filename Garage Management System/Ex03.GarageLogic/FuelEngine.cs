@@ -35,7 +35,6 @@ namespace Ex03.GarageLogic
             engineInfo.AppendLine($"Fuel Type:\t{r_FuelType}");
             engineInfo.AppendLine($"Current Fuel Amount: {m_CurrentEnergyAmount}");
             engineInfo.AppendLine($"Max Fuel Amount: {m_MaxEnergyAmount}");
-            engineInfo.AppendLine();
 
             return engineInfo.ToString();
         }

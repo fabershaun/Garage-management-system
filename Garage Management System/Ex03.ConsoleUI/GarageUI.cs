@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Ex03.GarageLogic;
 using static Ex03.GarageLogic.VehicleInGarage;
 
@@ -109,54 +110,6 @@ namespace Ex03.ConsoleUI
                 }
             }
         }
-
-        /*private void insertNewVehicle()
-        {
-            if(checkVehicleNotExists(out string licensePlate))  // Check if vehicle already exists and if not exist so continue
-            {
-                if(isLicensePlateValid(licensePlate))           // Check if license plate is valid
-                {
-                    printVehicleTypes(); // Print vehicle types list to choose from
-                    string selectedType = chooseVehicleTypeToInsert();
-
-                    if(selectedType != null)
-                    {
-                        Console.Write("Enter Model name: ");
-                        string modelName = Console.ReadLine();
-
-
-                        Console.Write("Energy Amount: ");
-                        string energyAmountStr = Console.ReadLine();
-                        try
-                        {
-                            float energyAmount = float.Parse(energyAmountStr);
-
-                            Vehicle vehicle = VehicleCreator.CreateVehicle(selectedType, licensePlate, modelName);
-
-                            vehicle.Engine.CurrentEnergyAmount = energyAmount;
-                            vehicle.Engine.EnergyPercentage = vehicle.Engine.ConvertAmountToPercentage(energyAmount);
-                            setWheels(vehicle.Wheels);
-                            Console.Write("Enter owner's name: ");
-                            string ownerName = Console.ReadLine();
-
-                            Console.Write("Enter owner's phone number: ");
-                            string ownerPhone = Console.ReadLine();
-
-                            handleAdditionalQuestions(vehicle);
-                            
-                            VehicleInGarage vehicleInGarage = new VehicleInGarage(ownerName, ownerPhone, eGarageVehicleStatus.InRepair, vehicle);
-                            r_GarageManager.m_VehiclesInGarage.Add(licensePlate, vehicleInGarage);
-
-                            Console.WriteLine("Vehicle inserted successfully.");
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine($"Failed to insert vehicle: {ex.Message}");
-                        }
-                    }
-                }
-            }
-        }*/
 
         private void insertNewVehicle()
         {
@@ -339,9 +292,11 @@ namespace Ex03.ConsoleUI
                     break;
                 case "N":
                     updateWheelsIndividually(io_Wheels);
-                    Console.WriteLine("Wheels were updated individually.");
+                    Console.WriteLine("Wheels were updated individually successfully.");
                     break;
             }
+
+            Console.WriteLine();
         }
 
         private string getUserChoiceForWheelUpdate()
@@ -392,6 +347,8 @@ namespace Ex03.ConsoleUI
                 io_Wheels[i].Manufacturer = manufacturer;
                 io_Wheels[i].CurrentAirPressure = pressure;
             }
+
+            Console.WriteLine();
         }
 
         private void getManufacturerAndCurrentAirPressureFromUser(out string o_Manufacturer, out float o_CurrentAirPressure)
@@ -463,6 +420,12 @@ namespace Ex03.ConsoleUI
 
         private void showLicenseNumbers()
         {
+            if(r_GarageManager.m_VehiclesInGarage.Count == 0)
+            {
+                Console.WriteLine("Garage is empty.");
+                return;
+            }
+
             Console.WriteLine("License plates currently in garage:");
 
             foreach (string licensePlate in r_GarageManager.m_VehiclesInGarage.Keys)
@@ -473,18 +436,13 @@ namespace Ex03.ConsoleUI
 
         private void changeVehicleStatus()
         {
-            Console.Write("Enter license plate: ");
-            string licensePlate = Console.ReadLine();
-
             string message;
-
-            if (!r_GarageManager.m_VehiclesInGarage.ContainsKey(licensePlate))
+  
+            if (checkVehicleExists(out VehicleInGarage vehicleInGarage))
             {
-                message = "No such vehicle found in the garage.";
-            }
-            else
-            {
+                string licensePlate = vehicleInGarage.Vehicle.LicenseNumber;
                 Console.WriteLine("Select new status:");
+
                 foreach (eGarageVehicleStatus status in Enum.GetValues(typeof(eGarageVehicleStatus)))
                 {
                     Console.WriteLine($"{(int)status}. {status}");
@@ -492,35 +450,27 @@ namespace Ex03.ConsoleUI
 
                 if (!int.TryParse(Console.ReadLine(), out int statusIndex) || !Enum.IsDefined(typeof(eGarageVehicleStatus), statusIndex))
                 {
-                    message = "Invalid status selection.";
+                    Console.WriteLine("Invalid status selection.");
                 }
                 else
                 {
                     r_GarageManager.m_VehiclesInGarage[licensePlate].Status = (eGarageVehicleStatus)statusIndex;
-                    message = "Vehicle status updated successfully.";
+                    Console.WriteLine("Vehicle status updated successfully.");
                 }
             }
-
-            Console.WriteLine(message);
         }
 
         private void inflateWheelsToMax()
         {
-            Console.Write("Enter license plate: ");
-            string licensePlate = Console.ReadLine();
-
-            if (!r_GarageManager.m_VehiclesInGarage.TryGetValue(licensePlate, out VehicleInGarage vehicleInGarage))
+            if(checkVehicleExists(out VehicleInGarage vehicleInGarage))
             {
-                Console.WriteLine("No such vehicle found in the garage.");
-                return;
-            }
+                foreach(Wheel wheel in vehicleInGarage.Vehicle.Wheels)
+                {
+                    wheel.InflateToMax();
+                }
 
-            foreach (Wheel wheel in vehicleInGarage.Vehicle.Wheels)
-            {
-                wheel.InflateToMax();
+                Console.WriteLine("All wheels inflated to maximum successfully.");
             }
-
-            Console.WriteLine("All wheels inflated to maximum.");
         }
 
         private void refuelVehicle()

@@ -26,6 +26,13 @@ namespace Ex03.GarageLogic
 
             Wheels = wheels;
         }
+        public enum eLicenseType
+        {
+            A = 1,
+            A2,
+            AB,
+            B2,
+        }
 
         internal eLicenseType LicenseType
         {
@@ -53,14 +60,6 @@ namespace Ex03.GarageLogic
             }
         }
 
-        public enum eLicenseType
-        {
-            A = 1,
-            A2,
-            AB,
-            B2,
-        }
-
         public override void SetAdditionalInfo(string i_AdditionalInfo1, string i_AdditionalInfo2)
         {
             m_LicenseType = (eLicenseType)Enum.Parse(typeof(eLicenseType), i_AdditionalInfo1, false);
@@ -83,7 +82,7 @@ namespace Ex03.GarageLogic
                 throw new ArgumentException($"Motorcycle expects exactly {k_NumOfAdditionalOptions} additional answers.");
             }
 
-            if(i_Index == 0)
+            if (i_Index == 0)
             {
                 // License type
                 if (!Enum.TryParse(i_Answers[0], ignoreCase: true, out eLicenseType license))
@@ -91,9 +90,9 @@ namespace Ex03.GarageLogic
                     throw new FormatException("Invalid license type.");
                 }
 
-                m_LicenseType = license;
+                LicenseType = license;
             }
-            else if(i_Index == 1)
+            else if (i_Index == 1)
             {
                 // Engine displacement
                 if (!int.TryParse(i_Answers[1], out int displacement))
@@ -103,7 +102,19 @@ namespace Ex03.GarageLogic
 
                 EngineDisplacementCc = displacement;
             }
-
         }
+
+        public override string GetAdditionalInfo()
+        {
+            StringBuilder additionalMotorcycleInfo = new StringBuilder();
+
+            additionalMotorcycleInfo.AppendLine("-----\tADDITIONAL INFO\t-----");
+            additionalMotorcycleInfo.AppendLine($"License Type: {m_LicenseType}");
+            additionalMotorcycleInfo.AppendLine($"Engine Displacement: {m_EngineDisplacementCc}");
+            additionalMotorcycleInfo.AppendLine();
+
+            return additionalMotorcycleInfo.ToString();
+        }
+
     }
 }
